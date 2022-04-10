@@ -100,6 +100,7 @@ public class Student {
             joinColumns = { @JoinColumn(name = "fk_author") },
             inverseJoinColumns = { @JoinColumn(name = "fk_course") })
     @JsonManagedReference
+
     private List<Course> courses = new ArrayList<>();
 
 

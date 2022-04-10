@@ -52,8 +52,7 @@ public class StudentControler {
 
 
         @ResponseStatus(HttpStatus.OK)
-        @PostMapping( value = "/book/{idStud}",
-                consumes={"application/json"})
+        @PostMapping("/book/{idStud}")
         public void addBook(@PathVariable Long idStud,@RequestBody Book book){
                 studentServices.addBook(idStud,book);
         }

@@ -17,9 +17,9 @@ import javax.validation.constraints.NotNull;
 
 @Entity(name="Book")
 @Table(name="book")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "id")
 public class Book {
     @Id
     @SequenceGenerator(

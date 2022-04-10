@@ -27,7 +27,6 @@ import org.springframework.test.context.TestPropertySources;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.testng.annotations.BeforeMethod;
 
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -70,10 +69,10 @@ class StudentControlerTest {
 
     public Faker fk;
 
-    @BeforeMethod
-    public void initMocks(){
-        MockitoAnnotations.openMocks(this);
-    }
+//    @BeforeMethod
+//    public void initMocks(){
+//        MockitoAnnotations.openMocks(this);
+//    }
 
     @BeforeEach
     public void setUp(){

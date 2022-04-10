@@ -20,7 +20,7 @@ class Api{
 
     getCourses = async () => {
         try {
-            let response = await this.api("/api/v1/demo/courses", "GET");
+            let response = await this.api("/api/v1/school/courses", "GET");
             return response.json();
         } catch (e) {
             throw new Error(e);
@@ -31,7 +31,7 @@ class Api{
 
     getPerson = async (id) => {
         try {
-            let response = await this.api("/api/v1/demo/person_id/" + id, "GET");
+            let response = await this.api("/api/v1/school/person_id/" + id, "GET");
             if (response.status == 200) {
                 return response.json();
             } else {
@@ -44,7 +44,7 @@ class Api{
 
     getCourseById = async (id) => {
         try {
-            let response = await this.api("/api/v1/demo/course_id/"+id, "GET");
+            let response = await this.api("/api/v1/school/course_id/"+id, "GET");
             return response.json();
         } catch (e) {
             throw new Error(e);
@@ -59,7 +59,7 @@ class Api{
 
     getUser = async (email,password) => {
         try {
-            let response = await this.api("/api/v1/demo/"+email+"/"+password, "GET");
+            let response = await this.api("/api/v1/school/"+email+"/"+password, "GET");
             if (response.status == 200) {
                 return response.json();
             } else {
