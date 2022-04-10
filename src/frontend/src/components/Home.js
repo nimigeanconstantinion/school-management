@@ -1,6 +1,8 @@
 import React,{useEffect,useState} from "react";
 import { useHistory } from "react-router-dom";
 import { Api } from "../Api";
+import logo from "../images/wheel.gif";
+
 export default () => {
     let history = useHistory();
     const [content, setContent] = useState("");
@@ -81,7 +83,10 @@ export default () => {
   
                </div>
             </main>
-        :<>Loading......</>    
+            : <>
+                <img src={require('../images/wheel.gif')} class="loading" />
+
+            </>    
 
     )
 }

@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -36,7 +38,9 @@ public class Book {
             name="title",
             columnDefinition = "TEXT"
     )
-    String title;
+    @NotNull(message = "Title is required")
+    @NotBlank(message = "Title is required and can not be blank")
+    private String title;
 
     public Book(String title) {
         this.title = title;

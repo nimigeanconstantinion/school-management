@@ -91,7 +91,7 @@ public class Course {
     @Override
     public boolean equals(Object o) {
         Course aux = (Course) o;
-        return this.getName().equals(aux.getName()) && this.getDepartment().equals(aux.getDepartment()) && this.getDescription().equals(aux.getDescription());
+        return this.name.equals(aux.getName()) && this.department.equals(aux.getDepartment()) && this.description.equals(aux.getDescription());
     }
 
 }

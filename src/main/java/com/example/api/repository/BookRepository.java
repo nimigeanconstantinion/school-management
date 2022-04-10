@@ -10,6 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<Book,Long> {
-    @Query("select b from Book b where b.student=?1 and b.title=?2")
-    Optional<Book> findBookByStudentAndTitle(Student student, String title);
+    @Query(value = "select * from Book b where b.student_id =?1 and b.title=?2",nativeQuery = true)
+    Optional<Book> findBookByStudentAndTitle(Long idS, String title);
 }

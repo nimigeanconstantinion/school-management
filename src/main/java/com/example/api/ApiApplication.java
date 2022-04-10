@@ -54,10 +54,14 @@ public class ApiApplication {
 //adaugare book
 //
 //            Student s=studentRepository.findById(1L).get();
-//            Book bk=new Book("Cartea doi");
+
+            //Book bk=new Book("Cartea o kk dkjkllsk");
+       // System.out.println(s.addBook(bk));
 //            s.addBook(bk);
+//            System.out.println(studentRepository.save(s));
 //            studentRepository.save(s);
 //
+           // studentServices.addBook(1L,bk);
 //        Book bk=bookRepository.findById(4L).get();
 //        Student s=studentRepository.findById(3L).get();
 //        s.removeBook(bk);
@@ -80,8 +84,11 @@ public class ApiApplication {
 //            s.getCourses().forEach((c)->{
 //                System.out.println(c.getName()+" "+c.getDepartment()+" dep:"+c.getDepartment());
 //            });
-//        Student s=studentServices.getUser("aaa","123");
+        //Student s=studentServices.getUser("aaa","123");
 //            System.out.println(s);
+            //System.out.println(bookRepository.findBookByStudentAndTitle(1L,"Cartea noua").isPresent());
+           // System.out.println(studentRepository.findById(1L).isPresent());
+            //s.getBooks().stream().filter(e->e.getTitle().equals("ceva"));
 
         };
     }

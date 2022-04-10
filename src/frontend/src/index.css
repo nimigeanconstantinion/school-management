@@ -31,6 +31,7 @@ header{
 }
 main{
   display: block;
+  position: relative;
 }
 #container{
   height: 500px;
@@ -313,4 +314,14 @@ h5{
   width: 20px;
   height: 20px;
 
+}
+.loading{
+  width: 100px;
+  height: 100px;
+  position: absolute;  
+  left: 50%;
+  transform: translate(-50%, 0);
+  top: 50%;
+  transform: translate(0,40vh);
+  
 }

@@ -48,17 +48,24 @@ public class StudentServices {
 
         }
 
-        public void addBook(Student student,Book book){
-            if(!bookRepository.findBookByStudentAndTitle(student,book.getTitle()).isPresent()){
-                student.addBook(book);
-                studentRepository.save(student);
+        public void addBook(Long idS,Book book){
+            if(studentRepository.findById(idS).isPresent()){
+                if(!bookRepository.findBookByStudentAndTitle(idS,book.getTitle()).isPresent()){
+                    Student student=studentRepository.findById(idS).get();
+                    student.addBook(book);
+                    studentRepository.save(student);
+                }else{
+                    throw new BookException("You have this book");
+                }
+
             }else{
-                throw new BookException("You have this book");
+                throw new StudentException("Student didn't exist");
             }
         }
 
-        public void removeBook(Student student,Book book){
-            if(bookRepository.findBookByStudentAndTitle(student, book.getTitle()).isPresent()){
+        public void removeBook(Long idStudent,Book book){
+            if(bookRepository.findBookByStudentAndTitle(idStudent, book.getTitle()).isPresent()){
+                Student student=studentRepository.findById(idStudent).get();
                 student.removeBook(book);
                 studentRepository.save(student);
             }else{
@@ -107,7 +114,7 @@ public class StudentServices {
 
     public void removeCourse(Course c){
         if(courseRepository.findAll().stream().filter(x->x.equals(c)).collect(Collectors.toList()).size()>0){
-            courseRepository.save(c);
+            courseRepository.delete(c);
         }else{
             throw new CourseException("Course didn't exist!!");
         }

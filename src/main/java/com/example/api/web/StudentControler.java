@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/demo")
+@RequestMapping("/api/v1/school")
 @CrossOrigin
 public class StudentControler {
 
@@ -49,16 +49,19 @@ public class StudentControler {
                 return studentServices.getUser(eml,pass);
         }
 
+
+
         @ResponseStatus(HttpStatus.OK)
-        @PostMapping("/book")
-        public void addBook(Student student,Book book){
-                studentServices.addBook(student,book);
+        @PostMapping( value = "/book/{idStud}",
+                consumes={"application/json"})
+        public void addBook(@PathVariable Long idStud,@RequestBody Book book){
+                studentServices.addBook(idStud,book);
         }
 
         @ResponseStatus(HttpStatus.OK)
-        @DeleteMapping("/book")
-        public void deleteBook(Student student,Book book){
-                studentServices.removeBook(student,book);
+        @DeleteMapping("/book/{idStudent}")
+        public void deleteBook(@PathVariable Long idStudent,Book book){
+                studentServices.removeBook(idStudent,book);
         }
 
 
@@ -75,7 +78,7 @@ public class StudentControler {
         }
 
         @ResponseStatus(HttpStatus.OK)
-        @PostMapping("/course")
+        @PostMapping("/course/{idS}")
         public void addCourse(Student owner,Course course){
 
                 studentServices.addCourse(course);
