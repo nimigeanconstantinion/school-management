@@ -1,8 +1,6 @@
 package com.example.api.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,9 +15,6 @@ import javax.validation.constraints.NotNull;
 
 @Entity(name="Book")
 @Table(name="book")
-//@JsonIdentityInfo(
-//        generator = ObjectIdGenerators.PropertyGenerator.class,
-//        property = "id")
 public class Book {
     @Id
     @SequenceGenerator(
@@ -56,6 +51,7 @@ public class Book {
             referencedColumnName = "id"
     )
     @JsonBackReference
+    @JsonIgnore
     private Student student;
 
     public boolean equals(Object o){

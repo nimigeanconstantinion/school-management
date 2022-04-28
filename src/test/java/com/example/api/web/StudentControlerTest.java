@@ -1,6 +1,7 @@
 package com.example.api.web;
 
 import com.example.api.model.Book;
+import com.example.api.model.Course;
 import com.example.api.model.Student;
 import com.example.api.repository.BookRepository;
 import com.example.api.repository.CourseRepository;
@@ -26,6 +27,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.TestPropertySources;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import static org.mockito.Mockito.doReturn;
@@ -50,15 +52,22 @@ import static org.junit.jupiter.api.Assertions.*;
 )
 class StudentControlerTest {
 
-    @Mock
+   // @Mock
+   @Autowired
     private BookRepository bookRepository;
-    @Mock
+    //@Mock
+    @Autowired
     private StudentRepository studentRepository;
-    @InjectMocks
-    private StudentServices underTest;
-
+    //@Mock
     @Autowired
     private CourseRepository courseRepository;
+
+
+    @Autowired
+  //  @InjectMocks
+    private StudentServices studentServices;
+
+
 
     @Autowired
     private MockMvc mockMvc;
@@ -69,68 +78,115 @@ class StudentControlerTest {
 
     public Faker fk;
 
-//    @BeforeMethod
-//    public void initMocks(){
-//        MockitoAnnotations.openMocks(this);
-//    }
 
     @BeforeEach
     public void setUp(){
         JacksonTester.initFields(this,new ObjectMapper());
+        // MockitoAnnotations.openMocks(underTest);
+//        underTest=new StudentServices(this.studentRepository,this.bookRepository,this.courseRepository);
+//
+
+    }
+
+    @AfterEach
+    void tearDown(){
+
+            studentRepository.deleteAll();
+            courseRepository.deleteAll();
 
 
     }
 
 
-    @Test
-    void getAllStudents() {
-        assertEquals(9,underTest.getAllStudents().size());
-    }
 
     @Test
-    void getAllStudentsN() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:5000/api/v1/demo")
-                .accept(MediaType.APPLICATION_JSON)).andDo(print()).andExpect(status().isOk());
+    void getAllStudents() throws Exception{
+        Student st=new Student("First","Last","aaa","123",20,1);
+        studentRepository.save(st);
+
+        assertEquals(1,studentServices.getAllStudents().size());
+        mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:5000/api/v1/school")
+       .accept(MediaType.APPLICATION_JSON)).andDo(print()).andExpect(status().isOk());
 
     }
 
 
     @Test
     void getAllCourses() throws Exception{
-        assertEquals(9,courseRepository.findAll().size());
-        mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:5000/api/v1/demo/courses")
+        Course c=new Course();
+        c.setName("Curs1");
+        c.setDepartment("departament");
+        c.setDescription("descriere");
+        c.setOwner(1L);
+        Student st=new Student("First","Last","aaa","123",20,1);
+        studentRepository.save(st);
+        courseRepository.save(c);
+        assertEquals(1,courseRepository.findAll().size());
+        mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:5000/api/v1/school/courses")
                 .accept(MediaType.APPLICATION_JSON)).andDo(print()).andExpect(status().isOk());
 
     }
 
     @Test
     void getStudent() throws Exception{
+        Student st=new Student("First","Last","aaa","123",20,1);
+        studentRepository.save(st);
+
         mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:5000/api/v1/school/{email}/{pass}","aaa","123")
                 .accept(MediaType.APPLICATION_JSON)).andDo(print())
-                .andExpect(status().isOk()).andExpect(content().string("{\"id\":3,\"firstName\":\"Chadwick\",\"lastName\":\"Powlowski\",\"email\":\"aaa\",\"age\":49,\"role\":0,\"password\":\"123\",\"courses\":[{\"id\":3,\"name\":\"rugby union\",\"department\":\"Professional degree\",\"time\":2000.0,\"description\":\"basketball\",\"owner\":3}],\"books\":[]}"));
+                .andExpect(status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("$.first_name").value("First"));
+
     }
 
     @Test
     void addBook() throws Exception{
-        Book bk=new Book("jnkllkljl");
-
+        Faker fk=new Faker();
+       Book bk=new Book(fk.book().title());
         Student st=new Student("Nelu","Santinelu","aaa","123",26,1);
-        st.setId(1L);
-       ///  doReturn(Optional.empty())
-       ///          .when(bookRepository).findBookByStudentAndTitle(st.getId(),bk.getTitle());
-         //Mockito.when(bookRepository.findBookByStudentAndTitle(1L,bk.getTitle())).thenReturn(Optional.empty());//    mockMvc.perform(post("http://localhost:5000/api/v1/school/book/{id}",1)
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(Objects.requireNonNull(asJsonString(bk))))
-//                .andExpect(status().isOk());
+        st.setId(3L);
+
+        assertEquals(Optional.of(st),studentRepository.findStudentByEmail("aaa"));
+        assertEquals(Optional.empty(),bookRepository.findBookByStudentAndTitle(st.getId(),bk.getTitle()));
+//        Mockito.when(studentRepository.findById(3L)).thenReturn(Optional.of(st));
+//
+//        Mockito.when(bookRepository.findBookByStudentAndTitle(st.getId(),bk.getTitle()))
+//                .thenReturn(Optional.empty());
+//
+
+   mockMvc.perform(post(String.format("http://localhost:5000/api/v1/school/book/%d",3))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(asJsonString(bk))))
+                .andExpect(status().isOk());
 
     }
 
     @Test
     void deleteBook() {
+        Book bk=new Book("Behold the Man");
+        Student st=new Student("Nelu","Santinelu","aaa","123",26,1);
+        st.setId(3L);
+        assertEquals(Optional.of(bk),bookRepository.findBookByStudentAndTitle(st.getId(),bk.getTitle()));
+
+
+
+
+
     }
 
     @Test
-    void addEnrolment() {
+    void addEnrolment() throws Exception{
+        Course c= new Course("oil wrestling","Bachelor's degree",2000,"soccer");
+        c.setId(2L);
+        Student s=new Student();
+        s.setId(5L);
+        s.setEmail("bbb");
+        s.setPassword("123");
+        assertEquals(Optional.of(s),studentRepository.findStudentByEmail(s.getEmail()));
+        assertEquals(Optional.of(c),courseRepository.findById(c.getId()));
+        mockMvc.perform(post(String.format("/api/v1/school/enrolment/%d/%d",s.getId(),c.getId())))
+                .andExpect(status().isOk());
+
+        assertEquals(1,studentRepository.findStudentByEmail("bbb").get().getCourses().size());
     }
 
     @Test

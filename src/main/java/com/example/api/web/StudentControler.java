@@ -1,15 +1,22 @@
 package com.example.api.web;
 
+import com.example.api.dto.BookDto;
 import com.example.api.model.Book;
 import com.example.api.model.Course;
 import com.example.api.model.Student;
 import com.example.api.repository.BookRepository;
 import com.example.api.repository.CourseRepository;
 import com.example.api.services.StudentServices;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jackson.JsonObjectDeserializer;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.DataInput;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,22 +59,23 @@ public class StudentControler {
 
 
         @ResponseStatus(HttpStatus.OK)
-        @PostMapping("/book/{idStud}")
-        public void addBook(@PathVariable Long idStud,@RequestBody Book book){
+        @PostMapping(value="/book/{idStud}")
+        public void addBook(@PathVariable Long idStud, @RequestBody Book book){
                 studentServices.addBook(idStud,book);
         }
 
         @ResponseStatus(HttpStatus.OK)
         @DeleteMapping("/book/{idStudent}")
         public void deleteBook(@PathVariable Long idStudent,Book book){
+
                 studentServices.removeBook(idStudent,book);
         }
 
 
         @ResponseStatus(HttpStatus.OK)
-        @PostMapping("/enrolment")
-        public void addEnrolment(Student student,Course course){
-                studentServices.addEnrolment(student,course);
+        @PostMapping("/enrolment/{idStudent}/{idCourse}")
+        public void addEnrolment(@PathVariable Long idStudent,@PathVariable Long idCourse){
+                studentServices.addEnrolment(idStudent,idCourse);
         }
 
         @ResponseStatus(HttpStatus.OK)
@@ -89,6 +97,12 @@ public class StudentControler {
                 return courseRepository.findById(idCourse).get();
         }
 
+        @ResponseStatus(HttpStatus.OK)
+        @GetMapping("/enrolmentsById/{idStud}")
+        public List<Course> getEnrolmentsById(@PathVariable Long idStud){
+                return studentServices.getUserById(idStud).getCourses();
+        }
+
 
 
         @ResponseStatus(HttpStatus.OK)
@@ -96,7 +110,6 @@ public class StudentControler {
         public  List<Course> getCoursesByOwner(@PathVariable Long idO){
                 return courseRepository.findAll().stream().filter(c->c.getId()==idO).collect(Collectors.toList());
         }
-
         @ResponseStatus(HttpStatus.OK)
         @GetMapping("/person_id/{id}")
         public Student getPersonById(@PathVariable Long id){

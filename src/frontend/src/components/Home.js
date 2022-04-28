@@ -82,7 +82,7 @@ export default () => {
                     {content}
   
                </div>
-            </main>
+        </main>
             : <>
                 <img src={require('../images/wheel.gif')} class="loading" />
 

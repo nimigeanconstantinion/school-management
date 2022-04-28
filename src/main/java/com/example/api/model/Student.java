@@ -1,6 +1,6 @@
 package com.example.api.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -21,6 +21,8 @@ import static javax.persistence.GenerationType.SEQUENCE;
 @NoArgsConstructor
 @Setter
 @Getter
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
+
 public class Student {
 
     @Id
@@ -110,6 +112,7 @@ public class Student {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+
     @JsonManagedReference
     @LazyCollection(LazyCollectionOption.FALSE)
     List<Book> books = new ArrayList<>();

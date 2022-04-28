@@ -44,8 +44,14 @@ class Api{
 
     getCourseById = async (id) => {
         try {
+
             let response = await this.api("/api/v1/school/course_id/"+id, "GET");
-            return response.json();
+            if (response.status == 200) {
+                return response.json();
+            } else {
+                return "";
+            }            
+           
         } catch (e) {
             throw new Error(e);
         }
@@ -54,6 +60,19 @@ class Api{
     }
 
 
+    getEnrolmentsById = async (id) => {
+        try {
+            let response = await this.api("/api/v1/school/enrolmentsById/" + id, "GET");
+            if (response.status == 200) {
+                return response.json();
+            } else {
+                return "";
+            }
+        } catch (e) {
+            throw new Error(e);
+        }
+
+    }
 
 
 
@@ -68,6 +87,15 @@ class Api{
                
                 throw new Error(data.message);
             }
+        } catch (e) {
+            throw new Error(e);
+        }
+
+    }
+
+    addEnrolment = async (id, course) => {
+        try {
+            
         } catch (e) {
             throw new Error(e);
         }

@@ -22,44 +22,44 @@ public class ApiApplication {
     @Bean
     CommandLineRunner commandLineRunner(StudentServices studentServices, StudentRepository studentRepository, CourseRepository courseRepository, BookRepository bookRepository) {
         return args -> {
-            Faker fk = new Faker();
-            // System.out.println(studentServices.getAllStudents());
-//            for(int i=1;i<10;i++){
-//                Student s=new Student();
-//                s.setFirstName(fk.name().firstName());
-//                s.setLastName(fk.name().lastName());
-//                s.setEmail(fk.internet().emailAddress());
-//                s.setAge(fk.number().numberBetween(18,70));
-//                s.setPassword("123");
-//                System.out.println(s);
-//                studentRepository.save(s);
-//            }
+//            Faker fk = new Faker();
+//            // System.out.println(studentServices.getAllStudents());
+////            for(int i=1;i<10;i++){
+////                Student s=new Student();
+////                s.setFirstName(fk.name().firstName());
+////                s.setLastName(fk.name().lastName());
+////                s.setEmail(fk.internet().emailAddress());
+////                s.setAge(fk.number().numberBetween(18,70));
+////                s.setPassword("123");
+////                System.out.println(s);
+////                studentRepository.save(s);
+////            }
+//////
+////                for(int i=1;i<10;i++){
+////                    Course c=new Course();
+////                    c.setName(fk.team().sport());
+////                    c.setDepartment(fk.demographic().educationalAttainment());
+////                    c.setDescription(fk.team().sport());
+////                    c.setTime(2000);
+////                    c.setOwner(3L);
+////                    courseRepository.save(c);
+////                }
+////          adaugare enrolment
+////            Course c=courseRepository.findById(3L).get();
+////            Student s=studentRepository.findById(3L).get();
 ////
-//                for(int i=1;i<10;i++){
-//                    Course c=new Course();
-//                    c.setName(fk.team().sport());
-//                    c.setDepartment(fk.demographic().educationalAttainment());
-//                    c.setDescription(fk.team().sport());
-//                    c.setTime(2000);
-//                    c.setOwner(3L);
-//                    courseRepository.save(c);
-//                }
-//          adaugare enrolment
-//            Course c=courseRepository.findById(3L).get();
-//            Student s=studentRepository.findById(3L).get();
+////            s.addCourse(c);
+////            studentRepository.save(s);
 //
-//            s.addCourse(c);
-//            studentRepository.save(s);
-
-//adaugare book
-//
+////adaugare book
+////
 //            Student s=studentRepository.findById(1L).get();
-
-            //Book bk=new Book("Cartea o kk dkjkllsk");
-       // System.out.println(s.addBook(bk));
+////
+//            Book bk=new Book("Cartea o ;lllkk dkjkllsk");
+//        //System.out.println(s.addBook(bk));
 //            s.addBook(bk);
-//            System.out.println(studentRepository.save(s));
-//            studentRepository.save(s);
+//         //   System.out.println(studentRepository.save(s));
+//            studentServices.addBook(1L,bk);
 //
            // studentServices.addBook(1L,bk);
 //        Book bk=bookRepository.findById(4L).get();

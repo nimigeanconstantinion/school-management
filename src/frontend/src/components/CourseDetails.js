@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { Api } from "../Api";
+import WorkMenu from "./WorkMenu";
 
 export default () => {
     
     let history = useHistory();
+
     const [course, setCourse] = useState({});
     const [pers, setPers] = useState({});
     const [persId, setPersId] = useState(0);
@@ -13,7 +15,9 @@ export default () => {
     let { userId } = useParams();
     const [updC, setUpdC] = useState(0);
     const [updP, setUpdP] = useState(0);
-
+    const [wmenu, setWmenu] = useState("");
+    const wMen = "";
+    
     useEffect(() => {
         //console.log("in use effect curs");
         getCourse();
@@ -54,7 +58,8 @@ export default () => {
     }
 
     return (<>
-      
+            
+
         {
             course 
             ? <main>

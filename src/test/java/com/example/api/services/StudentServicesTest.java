@@ -173,7 +173,7 @@ class StudentServicesTest {
         Course c=new Course();
         given(studentRepository.findStudentByEmail(student.getEmail())).willReturn(Optional.of(student));
         given(courseRepository.findById(c.getId())).willReturn(Optional.of(c));
-        underTest.addEnrolment(student,c);
+        underTest.addEnrolment(student.getId(),c.getId());
         then(studentRepository).should().save(studentArgumentCaptor.capture());
         Student st=studentArgumentCaptor.getValue();
         assertThat(st).isEqualTo(student);
@@ -186,7 +186,7 @@ class StudentServicesTest {
         student=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
         Course c=new Course();
         given(studentRepository.findStudentByEmail(student.getEmail())).willReturn(Optional.empty());
-        assertThatThrownBy(()->underTest.addEnrolment(student,c)).isInstanceOf(StudentException.class).hasMessageContaining("Student not");
+        assertThatThrownBy(()->underTest.addEnrolment(student.getId(),c.getId())).isInstanceOf(StudentException.class).hasMessageContaining("Student not");
 
         //given(courseRepository.findById(c.getId())).willReturn(Optional.of(c));
 
@@ -202,7 +202,7 @@ class StudentServicesTest {
 
         given(courseRepository.findById(c.getId())).willReturn(Optional.empty());
 
-        assertThatThrownBy(()->underTest.addEnrolment(student,c)).isInstanceOf(CourseException.class).hasMessageContaining("Course didn't exist");
+        assertThatThrownBy(()->underTest.addEnrolment(student.getId(),c.getId())).isInstanceOf(CourseException.class).hasMessageContaining("Course didn't exist");
     }
 
 

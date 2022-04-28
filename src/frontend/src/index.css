@@ -53,7 +53,7 @@ main{
   align-items: center;
 }
 .btnw{
-  width: 250px;
+  width: 200px;
   height: 60px;
   border: none;
   background: #7B689C;
@@ -67,7 +67,7 @@ main{
   background: #564970;
 }
 .ret{
-  width: 250px;
+  width: 200px;
   height: 60px;
   border:2px solid #7B689C;
   border-radius: 10px;
@@ -146,7 +146,7 @@ main{
 .com.books{
   margin-right:10px ;
 }
-.com.su,.com.so{
+.com.su,.com.so,.com.sout{
   margin-right: 100px;
 }
 
@@ -267,7 +267,7 @@ ul{
 #message{
   position: absolute;
   z-index: 100;
-  top: 110px;
+  top: 80px;
   right: -420px;
   display: flex;
   flex-direction: column;
@@ -324,4 +324,19 @@ h5{
   top: 50%;
   transform: translate(0,40vh);
   
+}
+
+
+#mymes{
+  position: absolute;
+  z-index: 200;
+  top: 50%;
+  left: 50vw;
+  background-color: #DBD7E2;
+  color: rgb(248, 166, 166);
+font-size: 2em;
+border: 1px solid black;
+  opacity: 1;
+  transition: opacity 2s;
+ 
 }

@@ -49,8 +49,9 @@ public class StudentServices {
         }
 
         public void addBook(Long idS,Book book){
-            if(studentRepository.findById(idS).isPresent()){
-                if(!bookRepository.findBookByStudentAndTitle(idS,book.getTitle()).isPresent()){
+            System.out.println(book);
+            if(studentRepository.findById(idS).get()!=null){
+                if(bookRepository.findBookByStudentAndTitle(idS,book.getTitle()).isEmpty()==true){
                     Student student=studentRepository.findById(idS).get();
                     student.addBook(book);
                     studentRepository.save(student);
@@ -73,11 +74,14 @@ public class StudentServices {
             }
         }
 
-        public void addEnrolment(Student student, Course course){
-           if(studentRepository.findStudentByEmail(student.getEmail()).isPresent()){
-               if(courseRepository.findById(course.getId()).isPresent()){
-                   student.addCourse(course);
-                   studentRepository.save(student);
+        public void addEnrolment(Long idStudent, Long idCourse){
+           Student s=studentRepository.findById(idStudent).get();
+           Course c=courseRepository.findById(idCourse).get();
+
+           if(studentRepository.findStudentByEmail(s.getEmail()).isPresent()){
+               if(courseRepository.findById(c.getId()).isPresent()){
+                   s.addCourse(c);
+                   studentRepository.save(s);
 
                }else{
                     throw new CourseException("Course didn't exist!");
