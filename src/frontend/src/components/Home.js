@@ -1,12 +1,14 @@
 import React,{useEffect,useState} from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory} from "react-router-dom";
 import { Api } from "../Api";
 import logo from "../images/wheel.gif";
+import CardCourse from "./CardCourse";
+import MyEnrolments from "./MyEnrolments";
 
 export default () => {
     let history = useHistory();
     const [content, setContent] = useState("");
-    const [courses, setCourses] = useState([]);
+    const [courses, setCourses] = useState(undefined);
     const [init, setInit] = useState(0);
     useEffect(() => {
         ShowCourses();
@@ -49,19 +51,20 @@ export default () => {
         try {
             let resp=await getAllCourses();
             setCourses(resp);
-            let arC = [];
-            courses.forEach(c => {
-                arC.push(
-                    <div class="course" onClick={courseClick}>
-                        <p class="coursedivid">
-                            {c.id}
-                        </p>
-                        <h6>Course</h6>
-                        <p>{c.name}</p>       
-                    </div>
-                )
-            })           
-            setContent(arC);
+            // let arC = [];
+            // courses.forEach(c => {
+            //     // arC.push(
+            //     //     <div class="course" onClick={courseClick}>
+            //     //         <p class="coursedivid">
+            //     //             {c.id}
+            //     //         </p>
+            //     //         <h6>Course</h6>
+            //     //         <p>{c.name}</p>       
+            //     //     </div>
+            //     // )
+            //     <MyEnrolment props={ c}/>
+            // })           
+            // setContent(arC);
             setInit(prev => {
                 prev++;
             });
@@ -73,20 +76,16 @@ export default () => {
     }
 
     return (
-        
-
-        content!=""?
-       
         <main>
-                <div id="container">
-                    {content}
-  
-               </div>
-        </main>
-            : <>
-                <img src={require('../images/wheel.gif')} class="loading" />
+            <div id="container">
+            {
+                courses 
+                        ? courses.map((c) => (<CardCourse course={c} courseClick={courseClick } />))
+                        :   <img src={require('../images/wheel.gif')} class="loading" />
+            }           
+            </div>
 
-            </>    
+        </main>
 
     )
 }

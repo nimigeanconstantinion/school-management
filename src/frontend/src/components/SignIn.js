@@ -9,7 +9,7 @@ import xer from "../images/close-svgrepo-com.svg";
 
 
 export default () => {
-    const history = useHistory();    
+    const history = useHistory(); 
     const eml =useRef("");
     const pass = useRef("");
     const [student, setStudent] = useState({});
@@ -66,10 +66,11 @@ export default () => {
             </div>)
         setMesaj(msg)
     }
+
     let animateMess = () => {
        console.log("in transform");
-        const elmm = document.querySelector("#message");
-        setTimeout(() => {
+       const elmm = document.querySelector("#message");
+       setTimeout(() => {
             elmm.style.transform = "translate(-430px)";
         
         }, 100);
@@ -92,10 +93,13 @@ export default () => {
         }, 4200);
     }
 
-    let validateUser =async  () => {
+    let validateUser = async (e) => {
+        e.preventDefault();
         try {
             let data = await getUser();
-            stud = data;
+            // stud = data;
+            // console.log("in validateuser");
+            console.log(data);
             setStudent(data);
             const usr = {};
             usr.id = data.id;
@@ -105,9 +109,11 @@ export default () => {
             Cookies.set("authenticatedUser", JSON.stringify(usr));
             
             setUser(usr);
-            history.push("/student");
+
+             history.push("/student");
 
         } catch (e) {
+            alert("eroareeeee");
             console.log(e.message.split(":")[2]);
             let msg=(e.message.split(":")[2]);
             mkMessage(msg);

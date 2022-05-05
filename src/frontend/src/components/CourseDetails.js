@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory} from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { Api } from "../Api";
 import WorkMenu from "./WorkMenu";
-
+import StudentBoard from "./StudentBoard";
+import { menuClk } from "./StudentBoard";
 export default () => {
     
     let history = useHistory();
@@ -16,6 +17,7 @@ export default () => {
     const [updC, setUpdC] = useState(0);
     const [updP, setUpdP] = useState(0);
     const [wmenu, setWmenu] = useState("");
+    
     const wMen = "";
     
     useEffect(() => {
@@ -57,12 +59,15 @@ export default () => {
         }
     }
 
-    return (<>
-            
+    return (
+        
+
+        <div>
+    
 
         {
             course 
-            ? <main>
+            ? <div class="containermain">
                 <div class="buttongroup"></div>
                 <h1 id="h1det">Course detail</h1>
                 <div id="detail">
@@ -89,9 +94,9 @@ export default () => {
                         </div>    
                     </aside>
                 </div>
-            </main >
+            </div >
             :<p>Loding.....</p>
         }
-        </>)
+        </div>)
 
 }

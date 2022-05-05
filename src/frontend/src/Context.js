@@ -23,17 +23,17 @@ const UserProvider = ({ children }) => {
     );
 }
 
-const MenuComm = ({ children }) => {
-    const [comm, setComm] = useState(undefined);
-    useEffect(() => {
-        if (Cookies.get("menucommand")) {
-            setComm(JSON.parse(Cookies.get("menucommand")));
-        }
+// const MenuComm = ({ children }) => {
+//     const [comm, setComm] = useState(undefined);
+//     useEffect(() => {
+//         if (Cookies.get("menucommand")) {
+//             setComm(JSON.parse(Cookies.get("menucommand")));
+//         }
             
-    }, [])
-    return (
+//     }, [])
+//     return (
 
-        <Context.Provider value={[comm, setComm]}>{ children}</Context.Provider>
-    )
-}
+//         <Context.Provider value={[comm, setComm]}>{ children}</Context.Provider>
+//     )
+// }
 export default  UserProvider ;

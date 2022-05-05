@@ -93,9 +93,14 @@ class Api{
 
     }
 
-    addEnrolment = async (id, course) => {
+    addEnrolment = async (idStud, idCourse) => {
         try {
-            
+            let response = await this.api("/api/v1/school/enrolment/" + idStud + "/" + idCourse,"POST");
+            if (response.status == 200) {
+                return response;
+            } else {
+                return response.message;
+            }
         } catch (e) {
             throw new Error(e);
         }
