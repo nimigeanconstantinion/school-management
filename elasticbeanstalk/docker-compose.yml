@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   backend:
-    image: "ion21/online-school"
+    image: "ion21/online-school:16.5.2022.17.56.31"
     ports:
       - "80:8080"
     restart: "always"
