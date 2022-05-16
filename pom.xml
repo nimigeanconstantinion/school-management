@@ -15,6 +15,8 @@
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>11</java.version>
+        <app.image.tag>latest</app.image.tag>
+        <app.image.name>online-school</app.image.name>
     </properties>
     <dependencies>
         <dependency>
@@ -69,6 +71,7 @@
         </dependency>
     </dependencies>
 
+
     <build>
         <plugins>
             <plugin>
@@ -101,8 +104,6 @@
             </plugin>
         </plugins>
     </build>
-
-
     <profiles>
         <profile>
             <id>jib-push-to-dockerhub</id>
@@ -132,7 +133,7 @@
                                 <phase>package</phase>
                                 <configuration>
                                     <to>
-                                        <image>docker.io/ion21/online-school:latest</image>
+                                        <image>docker.io/ion21/${app.image.name}:${app.image.tag}</image>
                                     </to>
                                 </configuration>
                                 <goals>
@@ -144,7 +145,7 @@
                                 <phase>package</phase>
                                 <configuration>
                                     <to>
-                                        <image>docker.io/ion21/online-school:latest</image>
+                                        <image>docker.io/ion21/${app.image.name}:latest</image>
                                     </to>
                                 </configuration>
                                 <goals>
@@ -156,6 +157,37 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>build-frontend</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-build-folder</id>
+                                <phase>process-classes</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <resources>
+                                        <resource>
+                                            <directory>src/client/build</directory>
+                                        </resource>
+                                    </resources>
+                                    <outputDirectory>src/main/resources/static</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
+
 
 </project>

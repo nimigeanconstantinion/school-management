@@ -16,6 +16,7 @@ import CourseDetails from "./CourseDetails";
 import { isEditable } from "@testing-library/user-event/dist/utils";
 import MyEnrolments from "./MyEnrolments";
 import MyE from "./MyEnrolments";
+import WMenu from "./WMenu";
 
 const menuClk = undefined;
 
@@ -25,22 +26,33 @@ export default () => {
     const [content, setContent] = useState("");
     const history = useHistory();
     const [user, setUser] = useContext(Context);
+    const [myList, setMyList] = useState([]);
+    const [cntClk, setCntClk] = useState(0);
+    const [x, setX] = useState(0);
+    let j = 0;
     let menuClk = (e) => {
         console.log("din studentboard");
-        console.log(e.target);   
+        console.log(e.target);  
+
         setCommand(e.target.className);
+
     }
 
     useEffect(() => {
+        console.log("===============am incarcat");
         setCommand(""); 
     }, [])
+    
+    useEffect(() => {
+        console.log("******din use effect " + cntClk);
+    }, [cntClk]);
     
     useEffect(() => {
         console.log("id user este======" + user.id);
         if (command == "btnw myc") {
             console.log("am apasat myenrolments");
             //history.push("/studentWork/" + user.id);
-           // history.push("/studentWork");
+           // history.push("/wstudent");
         } 
     }, [command])
     
@@ -48,14 +60,15 @@ export default () => {
         
         <>
     
-            <WorkMenu menuClk={menuClk}/>
+            <WMenu handleClick={menuClk} refresh={ cntClk}/>
             <main>
                 
                 {
                     
                     command == "btnw myc" ?
                     <MyEnrolments/>
-                    :(<p></p>)
+                        :""
+                
     
                  }   
             </main>

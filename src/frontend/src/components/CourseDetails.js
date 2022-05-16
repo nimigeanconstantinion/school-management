@@ -5,15 +5,18 @@ import { Api } from "../Api";
 import WorkMenu from "./WorkMenu";
 import StudentBoard from "./StudentBoard";
 import { menuClk } from "./StudentBoard";
-export default () => {
+export default ({idCourse,idUser}) => {
     
     let history = useHistory();
 
     const [course, setCourse] = useState({});
     const [pers, setPers] = useState({});
     const [persId, setPersId] = useState(0);
-    let { courseId } = useParams();
-    let { userId } = useParams();
+    //let { courseId } = useParams();
+    //let { userId } = useParams();
+    let { courseId } = idCourse;
+    let { userId } = idUser;
+    const { owner, setOwner } = useState({});
     const [updC, setUpdC] = useState(0);
     const [updP, setUpdP] = useState(0);
     const [wmenu, setWmenu] = useState("");
@@ -21,28 +24,38 @@ export default () => {
     const wMen = "";
     
     useEffect(() => {
-        //console.log("in use effect curs");
-        getCourse();
+        console.log("id transmis=" + idCourse);
+        getCourse(idCourse);
+        
+    },[])
+    // useEffect(() => {
+    //     //console.log("in use effect curs");
+    //     getCourse(courseId);
     
-    }, [updC])
+    // }, [updC])
     
 
-    useEffect(() => {
-        getOwner(updP);
+    // useEffect(() => {
+    //     getOwner(userId);
         
-    }, [updP])
+    // }, [updP])
     
-    let getCourse =async () => {
+    let getCourse =async (editId) => {
         let api = new Api();
         try {
-            let data = await api.getCourseById(courseId);
-            
-            let dataP = await api.getPerson(data.owner);
-            //console.log("----in course "+courseId);
-            
-            //console.log(data);
+            let data = await api.getCourseById(editId);
+            let idO = data.owner;
+
+            console.log("----in course " + editId);
+            console.log("ownerul are id-ul " + idO);
+            let result = await getOwner(idO);
+            console.log("numele ownerului este="+result.firstName);
+            //setOwner(result);
+            setPers(result);
             setCourse(data);
-            setPers(dataP)
+
+            //console.log(data);
+     
         
         } catch (e) {
             throw new Error(e);
@@ -53,7 +66,7 @@ export default () => {
         let api = new Api();
         try {
             let data = await api.getPerson(id);
-            setPers(data);
+            return data;
         } catch (e) {
             throw new Error(e);
         }
@@ -95,7 +108,7 @@ export default () => {
                     </aside>
                 </div>
             </div >
-            :<p>Loding.....</p>
+            :<p>Loding hhhh.....</p>
         }
         </div>)
 
