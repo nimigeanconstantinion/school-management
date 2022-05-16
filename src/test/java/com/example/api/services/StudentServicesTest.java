@@ -64,211 +64,211 @@ class StudentServicesTest {
     }
 
 
-    @Test
-    void addStudentOK(){
-        Student st=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
-        given(this.studentRepository.findStudentByEmail(st.getEmail())).willReturn(Optional.empty());
-        underTest.addStudent(st);
-
-        then(studentRepository).should().save(studentArgumentCaptor.capture());
-        Student newS=studentArgumentCaptor.getValue();
-        assertThat(newS).isEqualTo(st);
-    }
-
-
-    @Test
-    void addStudentNotOK(){
-        Student st=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
-        given(this.studentRepository.findStudentByEmail(st.getEmail())).willReturn(Optional.of(st));
-
-        assertThatThrownBy(()->underTest.addStudent(st)).isInstanceOf(StundentExists.class).hasMessageContaining("exists");
-    }
-
-
-    @Test
-    void removeStudentOK() {
-        Student st=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
-        given(this.studentRepository.findStudentByEmail(st.getEmail())).willReturn(Optional.of(st));
-        underTest.removeStudent(st);
-        then(studentRepository).should().delete(studentArgumentCaptor.capture());
-        Student delS=studentArgumentCaptor.getValue();
-        assertThat(delS).isEqualTo(st);
-
-    }
-
-
-    @Test
-    void removeStudentNotOK() {
-        Student st=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
-        given(this.studentRepository.findStudentByEmail(st.getEmail())).willReturn(Optional.empty());
-
-        assertThatThrownBy(()->underTest.removeStudent(st)).isInstanceOf(NotFoundStudent.class).hasMessageContaining("not");
-    }
-
-
-    @Test
-    void addBookOK() {
-        student=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
-        student.setId(1L);
-        Book bk=new Book(fk.book().title());
-        bk.setId(3L);
-//        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+//    @Test
+//    void addStudentOK(){
+//        Student st=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
+//        given(this.studentRepository.findStudentByEmail(st.getEmail())).willReturn(Optional.empty());
+//        underTest.addStudent(st);
 //
-//        Set<ConstraintViolation<Book>> violations = validator.validate(bk);
-//       // System.out.println(violations.iterator().next().getMessage());
-//        assertThat(violations.size()).isEqualTo(0);
-
-        given(studentRepository.findById(student.getId())).willReturn(Optional.of(student));
-        given(this.bookRepository.findBookByStudentAndTitle(student.getId(),bk.getTitle())).willReturn(Optional.empty());
-
-        underTest.addBook(student.getId(),bk);
-
-        then(studentRepository).should().save(studentArgumentCaptor.capture());
-        Student stt=studentArgumentCaptor.getValue();
-        assertThat(stt).isEqualTo(student);
-
-
-    }
-
-    @Test
-    void addBookNotOK() {
-        student=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
-        Book bk=new Book(fk.book().title());
-        bk.setId(3L);
-        given(studentRepository.findById(student.getId())).willReturn(Optional.of(student));
-        given(bookRepository.findBookByStudentAndTitle(student.getId(),bk.getTitle())).willReturn(Optional.of(bk));
-        assertThatThrownBy(()->underTest.addBook(student.getId(),bk)).isInstanceOf(BookException.class).hasMessageContaining("You have this book");
-    }
-
-
-    @Test
-    void removeBookOK() {
-        student=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
-        student.setId(1L);
-        Book bk=new Book(fk.book().title());
-        bk.setId(5L);
-        given(studentRepository.findById(student.getId())).willReturn(Optional.of(student));
-        given(bookRepository.findBookByStudentAndTitle(student.getId(),bk.getTitle())).willReturn(Optional.of(bk));
-        underTest.removeBook(student.getId(),bk);
-        then(studentRepository).should().save(studentArgumentCaptor.capture());
-        Student st=studentArgumentCaptor.getValue();
-        assertThat(st).isEqualTo(student);
-
-    }
-
-
-    @Test
-    void removeBookNotOK() {
-        student=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
-        Book bk=new Book(fk.book().title());
-        given(bookRepository.findBookByStudentAndTitle(student.getId(),bk.getTitle())).willReturn(Optional.empty());
-
-        assertThatThrownBy(()->underTest.removeBook(student.getId(),bk)).isInstanceOf(BookException.class).hasMessageContaining("You don't have");
-    }
-
-
-    @Test
-    void addEnrolmentOK() {
+//        then(studentRepository).should().save(studentArgumentCaptor.capture());
+//        Student newS=studentArgumentCaptor.getValue();
+//        assertThat(newS).isEqualTo(st);
+//    }
+//
+//
+//    @Test
+//    void addStudentNotOK(){
+//        Student st=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
+//        given(this.studentRepository.findStudentByEmail(st.getEmail())).willReturn(Optional.of(st));
+//
+//        assertThatThrownBy(()->underTest.addStudent(st)).isInstanceOf(StundentExists.class).hasMessageContaining("exists");
+//    }
+//
+//
+//    @Test
+//    void removeStudentOK() {
+//        Student st=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
+//        given(this.studentRepository.findStudentByEmail(st.getEmail())).willReturn(Optional.of(st));
+//        underTest.removeStudent(st);
+//        then(studentRepository).should().delete(studentArgumentCaptor.capture());
+//        Student delS=studentArgumentCaptor.getValue();
+//        assertThat(delS).isEqualTo(st);
+//
+//    }
+//
+//
+//    @Test
+//    void removeStudentNotOK() {
+//        Student st=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
+//        given(this.studentRepository.findStudentByEmail(st.getEmail())).willReturn(Optional.empty());
+//
+//        assertThatThrownBy(()->underTest.removeStudent(st)).isInstanceOf(NotFoundStudent.class).hasMessageContaining("not");
+//    }
+//
+//
+//    @Test
+//    void addBookOK() {
+//        student=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
+//        student.setId(1L);
+//        Book bk=new Book(fk.book().title());
+//        bk.setId(3L);
+////        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+////
+////        Set<ConstraintViolation<Book>> violations = validator.validate(bk);
+////       // System.out.println(violations.iterator().next().getMessage());
+////        assertThat(violations.size()).isEqualTo(0);
+//
+//        given(studentRepository.findById(student.getId())).willReturn(Optional.of(student));
+//        given(this.bookRepository.findBookByStudentAndTitle(student.getId(),bk.getTitle())).willReturn(Optional.empty());
+//
+//        underTest.addBook(student.getId(),bk);
+//
+//        then(studentRepository).should().save(studentArgumentCaptor.capture());
+//        Student stt=studentArgumentCaptor.getValue();
+//        assertThat(stt).isEqualTo(student);
+//
+//
+//    }
+//
+//    @Test
+//    void addBookNotOK() {
+//        student=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
+//        Book bk=new Book(fk.book().title());
+//        bk.setId(3L);
+//        given(studentRepository.findById(student.getId())).willReturn(Optional.of(student));
+//        given(bookRepository.findBookByStudentAndTitle(student.getId(),bk.getTitle())).willReturn(Optional.of(bk));
+//        assertThatThrownBy(()->underTest.addBook(student.getId(),bk)).isInstanceOf(BookException.class).hasMessageContaining("You have this book");
+//    }
+//
+//
+//    @Test
+//    void removeBookOK() {
+//        student=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
+//        student.setId(1L);
+//        Book bk=new Book(fk.book().title());
+//        bk.setId(5L);
+//        given(studentRepository.findById(student.getId())).willReturn(Optional.of(student));
+//        given(bookRepository.findBookByStudentAndTitle(student.getId(),bk.getTitle())).willReturn(Optional.of(bk));
+//        underTest.removeBook(student.getId(),bk);
+//        then(studentRepository).should().save(studentArgumentCaptor.capture());
+//        Student st=studentArgumentCaptor.getValue();
+//        assertThat(st).isEqualTo(student);
+//
+//    }
+//
+//
+//    @Test
+//    void removeBookNotOK() {
+//        student=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
+//        Book bk=new Book(fk.book().title());
+//        given(bookRepository.findBookByStudentAndTitle(student.getId(),bk.getTitle())).willReturn(Optional.empty());
+//
+//        assertThatThrownBy(()->underTest.removeBook(student.getId(),bk)).isInstanceOf(BookException.class).hasMessageContaining("You don't have");
+//    }
+//
+//
+//    @Test
+//    void addEnrolmentOK() {
+////        student=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
+////        Course c=new Course();
+////        given(studentRepository.findStudentByEmail(student.getEmail())).willReturn(Optional.of(student));
+////        given(courseRepository.findById(c.getId())).willReturn(Optional.of(c));
+////        underTest.addEnrolment(student.getId(),c.getId());
+////        then(studentRepository).should().save(studentArgumentCaptor.capture());
+////        Student st=studentArgumentCaptor.getValue();
+////        assertThat(st).isEqualTo(student);
+//
+//    }
+//
+//
+//    @Test
+//    void addEnrolmentNotOKStudent() {
+//// lw       student=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
+////        Course c=new Course();
+////        given(studentRepository.findStudentByEmail(student.getEmail())).willReturn(Optional.empty());
+////lw        assertThatThrownBy(()->underTest.addEnrolment(student.getId(),c.getId())).isInstanceOf(StudentException.class).hasMessageContaining("Student not");
+//
+//        //given(courseRepository.findById(c.getId())).willReturn(Optional.of(c));
+//
+//       // assertThatThrownBy(()->underTest.addEnrolment(student,c)).isInstanceOf(CourseException.class).hasMessageContaining("Course didn't exist");
+//    }
+//
+//
+//    @Test
+//    void addEnrolmentNotOKCourse() {
+////        student=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
+////        Course c=new Course();
+////        given(studentRepository.findStudentByEmail(student.getEmail())).willReturn(Optional.of(student));
+////
+////        given(courseRepository.findById(c.getId())).willReturn(Optional.empty());
+////
+////        assertThatThrownBy(()->underTest.addEnrolment(student.getId(),c.getId())).isInstanceOf(CourseException.class).hasMessageContaining("Course didn't exist");
+//    }
+//
+//
+//    @Test
+//    void removeEnrolmentOK() {
 //        student=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
 //        Course c=new Course();
 //        given(studentRepository.findStudentByEmail(student.getEmail())).willReturn(Optional.of(student));
 //        given(courseRepository.findById(c.getId())).willReturn(Optional.of(c));
-//        underTest.addEnrolment(student.getId(),c.getId());
+//        underTest.removeEnrolment(student,c);
 //        then(studentRepository).should().save(studentArgumentCaptor.capture());
 //        Student st=studentArgumentCaptor.getValue();
 //        assertThat(st).isEqualTo(student);
-
-    }
-
-
-    @Test
-    void addEnrolmentNotOKStudent() {
-// lw       student=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
-//        Course c=new Course();
-//        given(studentRepository.findStudentByEmail(student.getEmail())).willReturn(Optional.empty());
-//lw        assertThatThrownBy(()->underTest.addEnrolment(student.getId(),c.getId())).isInstanceOf(StudentException.class).hasMessageContaining("Student not");
-
-        //given(courseRepository.findById(c.getId())).willReturn(Optional.of(c));
-
-       // assertThatThrownBy(()->underTest.addEnrolment(student,c)).isInstanceOf(CourseException.class).hasMessageContaining("Course didn't exist");
-    }
-
-
-    @Test
-    void addEnrolmentNotOKCourse() {
+//
+//    }
+//
+//    @Test
+//    void removeEnrolmentNotOK() {
 //        student=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
 //        Course c=new Course();
+//        given(studentRepository.findStudentByEmail(student.getEmail())).willReturn(Optional.empty());
+//        assertThatThrownBy(()->underTest.removeEnrolment(student,c)).isInstanceOf(StudentException.class).hasMessageContaining("Student not");
+//
 //        given(studentRepository.findStudentByEmail(student.getEmail())).willReturn(Optional.of(student));
 //
 //        given(courseRepository.findById(c.getId())).willReturn(Optional.empty());
+//        assertThatThrownBy(()->underTest.removeEnrolment(student,c)).isInstanceOf(CourseException.class).hasMessageContaining("Course didn't");
+//    }
 //
-//        assertThatThrownBy(()->underTest.addEnrolment(student.getId(),c.getId())).isInstanceOf(CourseException.class).hasMessageContaining("Course didn't exist");
-    }
-
-
-    @Test
-    void removeEnrolmentOK() {
-        student=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
-        Course c=new Course();
-        given(studentRepository.findStudentByEmail(student.getEmail())).willReturn(Optional.of(student));
-        given(courseRepository.findById(c.getId())).willReturn(Optional.of(c));
-        underTest.removeEnrolment(student,c);
-        then(studentRepository).should().save(studentArgumentCaptor.capture());
-        Student st=studentArgumentCaptor.getValue();
-        assertThat(st).isEqualTo(student);
-
-    }
-
-    @Test
-    void removeEnrolmentNotOK() {
-        student=new Student(fk.name().firstName(),fk.name().lastName(),fk.internet().emailAddress(),"123",20,1);
-        Course c=new Course();
-        given(studentRepository.findStudentByEmail(student.getEmail())).willReturn(Optional.empty());
-        assertThatThrownBy(()->underTest.removeEnrolment(student,c)).isInstanceOf(StudentException.class).hasMessageContaining("Student not");
-
-        given(studentRepository.findStudentByEmail(student.getEmail())).willReturn(Optional.of(student));
-
-        given(courseRepository.findById(c.getId())).willReturn(Optional.empty());
-        assertThatThrownBy(()->underTest.removeEnrolment(student,c)).isInstanceOf(CourseException.class).hasMessageContaining("Course didn't");
-    }
-
-
-    @Test
-    void addCourseOK() {
-        Course c=new Course("Course","department",2L,"description");
-        given(courseRepository.findAll()).willReturn(new ArrayList<>());
-        underTest.addCourse(c);
-        then(courseRepository).should().save(courseArgumentCaptor.capture());
-        Course nC=courseArgumentCaptor.getValue();
-        assertThat(nC).isEqualTo(c);
-
-    }
-
-
-    @Test
-    void addCourseNotOK() {
-        Course c=new Course("Course","department",2L,"description");
-        given(courseRepository.findAll()).willReturn(List.of(c));
-        assertThatThrownBy(()->underTest.addCourse(c)).isInstanceOf(CourseException.class).hasMessageContaining("Course exist");
-    }
-
-
-    @Test
-    void removeCourseOK() {
-        Course c=new Course("Course","department",2L,"description");
-        given(courseRepository.findAll()).willReturn(List.of(c));
-        underTest.removeCourse(c);
-        then(courseRepository).should().delete(courseArgumentCaptor.capture());
-        Course nC=courseArgumentCaptor.getValue();
-        assertThat(nC).isEqualTo(c);
-
-    }
-
-
-    @Test
-    void removeCourseNotOK() {
-        Course c=new Course("Course","department",2L,"description");
-        given(courseRepository.findAll()).willReturn(new ArrayList<>());
-        assertThatThrownBy(()->underTest.removeCourse(c)).isInstanceOf(CourseException.class).hasMessageContaining("Course didn't");
-    }
+//
+//    @Test
+//    void addCourseOK() {
+//        Course c=new Course("Course","department",2L,"description");
+//        given(courseRepository.findAll()).willReturn(new ArrayList<>());
+//        underTest.addCourse(c);
+//        then(courseRepository).should().save(courseArgumentCaptor.capture());
+//        Course nC=courseArgumentCaptor.getValue();
+//        assertThat(nC).isEqualTo(c);
+//
+//    }
+//
+//
+//    @Test
+//    void addCourseNotOK() {
+//        Course c=new Course("Course","department",2L,"description");
+//        given(courseRepository.findAll()).willReturn(List.of(c));
+//        assertThatThrownBy(()->underTest.addCourse(c)).isInstanceOf(CourseException.class).hasMessageContaining("Course exist");
+//    }
+//
+//
+//    @Test
+//    void removeCourseOK() {
+//        Course c=new Course("Course","department",2L,"description");
+//        given(courseRepository.findAll()).willReturn(List.of(c));
+//        underTest.removeCourse(c);
+//        then(courseRepository).should().delete(courseArgumentCaptor.capture());
+//        Course nC=courseArgumentCaptor.getValue();
+//        assertThat(nC).isEqualTo(c);
+//
+//    }
+//
+//
+//    @Test
+//    void removeCourseNotOK() {
+//        Course c=new Course("Course","department",2L,"description");
+//        given(courseRepository.findAll()).willReturn(new ArrayList<>());
+//        assertThatThrownBy(()->underTest.removeCourse(c)).isInstanceOf(CourseException.class).hasMessageContaining("Course didn't");
+//    }
 }
