@@ -27,8 +27,8 @@ import java.util.stream.Collectors;
 @CrossOrigin
 public class StudentControler {
 
-        StudentServices studentServices;
-        CourseRepository courseRepository;
+        private StudentServices studentServices;
+        private CourseRepository courseRepository;
         BookRepository bookRepository;
 
         @Autowired

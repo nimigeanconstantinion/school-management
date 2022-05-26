@@ -132,6 +132,5 @@ class StudentControlerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/school/addstudent")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(st))).andExpect(status().isOk());
-        //.andExpect(status().isOk());}
     }
 }
