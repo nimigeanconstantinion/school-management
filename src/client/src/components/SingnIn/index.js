@@ -4,6 +4,7 @@ import  Api  from "../../Api.js";
 
 import { Context } from "../../Context";
 import { useContext } from "react";
+
 import Cookies from "js-cookie";
 import xer from "../../images/close-svgrepo-com.svg";
 import {WrapperSignIn} from "./SignIn.style";
@@ -20,6 +21,7 @@ export default () => {
     const [iserr,setIserr]=useState(false);
     const [user, setUser] = useContext(Context);
     let stud = {};
+
     useEffect(() => {
 
     },[mesaj])
@@ -37,36 +39,15 @@ export default () => {
         let api = new Api();
         try {
             let response = await api.getUser(xeml, xpassw);
-            console.log(response);
             return response;
 
         } catch (e) {
-            //alert(e.message.split(":")[1]);
             throw new Error(e);
 
-            // this.showMessage("error", e.message.split(":")[1]);
         }
     }
 
 
-
-
-    // let mkMessage = (mes) => {
-    //     let msg=(
-    //         <div id="mess">
-    //             <div id="logo">
-    //                 <img src={require("../../images/close-svgrepo-com.svg").default} alt="" srcset=""/>
-    //             </div>
-    //             <div id="msg">
-    //                 <h5>Error</h5>
-    //                 <p id="mtext">{ mes}</p>
-    //             </div>
-    //             <div id="modal">
-    //                 <img src={require("../../images/close-real.svg").default } alt="" srcset=""/>
-    //             </div>
-    //         </div>)
-    //     setMesaj(msg)
-    // }
 
     let animateMess = () => {
         console.log("in transform");
@@ -100,18 +81,29 @@ export default () => {
             let data = await getUser();
             // stud = data;
             // console.log("in validateuser");
-            console.log(data);
-            setStudent(data);
-            const usr = {};
-            usr.id = data.id;
-            usr.firstName = data.firstName;
-            usr.lastName = data.lastName;
+            let tuser=data;
 
-            Cookies.set("authenticatedUser", JSON.stringify(usr));
+            if(tuser.password===pass.current.value){
+                setStudent(data);
+                const usr = {};
+                usr.id = data.id;
+                usr.firstName = data.firstName;
+                usr.lastName = data.lastName;
 
-            setUser(usr);
+                Cookies.set("authenticatedUser", JSON.stringify(usr));
 
-            history("/student");
+                setUser(usr);
+
+                history("/studentBoard");
+
+            }else{
+                let msg="Wrong password !!!";
+
+                setMesaj(msg);
+                animateMess();
+
+            }
+
 
         } catch (e) {
             console.log(e);

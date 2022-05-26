@@ -1,7 +1,5 @@
 package com.example.api.web;
 
-import com.example.api.model.Book;
-import com.example.api.model.Course;
 import com.example.api.model.Student;
 import com.example.api.repository.BookRepository;
 import com.example.api.repository.CourseRepository;
@@ -18,22 +16,24 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.TestPropertySources;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MockMvcBuilder;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import static org.mockito.Mockito.doReturn;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
-import java.util.Arrays;
+import java.lang.management.OperatingSystemMXBean;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -42,178 +42,96 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-import static org.junit.jupiter.api.Assertions.*;
+
+
+
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @EnableWebMvc
 @ExtendWith(MockitoExtension.class)
+
 @TestPropertySource(
         locations="classpath:application-it.properties"
 )
+
 class StudentControlerTest {
 
-   // @Mock
-   @Autowired
-    private BookRepository bookRepository;
-    //@Mock
-    @Autowired
-    private StudentRepository studentRepository;
-    //@Mock
     @Autowired
     private CourseRepository courseRepository;
 
+    @Autowired
+    private BookRepository bookRepository;
 
     @Autowired
-  //  @InjectMocks
+    private StudentRepository studentRepository;
+
+    @Autowired
     private StudentServices studentServices;
 
+    @Autowired
+    private StudentControler studentControler;
 
 
     @Autowired
     private MockMvc mockMvc;
 
-
-
-    private JacksonTester<Student> studentJacksonTester;
-
-    public Faker fk;
-
-
     @BeforeEach
-    public void setUp(){
-        JacksonTester.initFields(this,new ObjectMapper());
-        // MockitoAnnotations.openMocks(underTest);
-//        underTest=new StudentServices(this.studentRepository,this.bookRepository,this.courseRepository);
-//
+    public void setUp() {
+        JacksonTester.initFields(this, new ObjectMapper());
+        MockitoAnnotations.openMocks(this);
+        // this.mockMvc= MockMvcBuilders.standaloneSetup().build();
 
     }
 
     @AfterEach
-    void tearDown(){
 
+    void tearDown(){
             studentRepository.deleteAll();
             courseRepository.deleteAll();
+    }
+//    @ExtendWith(MockitoExtension.class)
+//    @MockitoSettings(strictness = Strictness.LENIENT)
 
+    @Test
+    void getAllStudents() throws Exception {
+        Student st = new Student("First", "Last", "aaa", "123", 20, 1);
+        List<Student> lista = List.of(st);
+        StudentServices localS = Mockito.mock(StudentServices.class);
+
+        Mockito.when(localS.getAllStudents()).thenReturn(lista);
+        List xs = localS.getAllStudents();
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/school")
+                .accept(MediaType.APPLICATION_JSON)).andDo(print()).andExpect(status().isOk());
 
     }
 
-
-
     @Test
-    void getAllStudents() throws Exception{
-//        Student st=new Student("First","Last","aaa","123",20,1);
-//        studentRepository.save(st);
+    void getStudent() throws Exception {
+//        Student st = new Student("Ion","Lenta","aaa","123",20,0);
 //
-//        assertEquals(1,studentServices.getAllStudents().size());
-//        mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:5000/api/v1/school")
-//       .accept(MediaType.APPLICATION_JSON)).andDo(print()).andExpect(status().isOk());
-
+//        Mockito.when(studentRepository.findStudentByEmail("aaa")).thenReturn(Optional.of(st));
+//        mockMvc.perform(get("/api/v1/school/{email}/{pass}","aaa","123")
+//               .contentType(MediaType.APPLICATION_JSON)
+//               .content(Objects.requireNonNull(asJsonString(st)))).andExpect(status().isOk());
     }
 
-
-    @Test
-    void getAllCourses() throws Exception{
-//        Course c=new Course();
-//        c.setName("Curs1");
-//        c.setDepartment("departament");
-//        c.setDescription("descriere");
-//        c.setOwner(1L);
-//        Student st=new Student("First","Last","aaa","123",20,1);
-//        studentRepository.save(st);
-//        courseRepository.save(c);
-//        assertEquals(1,courseRepository.findAll().size());
-//        mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:5000/api/v1/school/courses")
-//                .accept(MediaType.APPLICATION_JSON)).andDo(print()).andExpect(status().isOk());
-
+    public static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
-    void getStudent() throws Exception{
-//        Student st=new Student("First","Last","aaa","123",20,1);
-//        studentRepository.save(st);
-//
-//        mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:5000/api/v1/school/{email}/{pass}","aaa","123")
-//                .accept(MediaType.APPLICATION_JSON)).andDo(print())
-//                .andExpect(status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("$.first_name").value("First"));
+    void addUser() throws Exception {
+        Student st = new Student("Nelu", "Santinelu", "aala", "123", 26, 1);
+        System.out.println(asJsonString(st));
 
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/school/addstudent")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(st))).andExpect(status().isOk());
+        //.andExpect(status().isOk());}
     }
-
-    @Test
-    void addBook() throws Exception{
-//        Faker fk=new Faker();
-//       Book bk=new Book(fk.book().title());
-//        Student st=new Student("Nelu","Santinelu","aaa","123",26,1);
-//        st.setId(3L);
-
-//lw        assertEquals(Optional.of(st),studentRepository.findStudentByEmail("aaa"));
-//lw        assertEquals(Optional.empty(),bookRepository.findBookByStudentAndTitle(st.getId(),bk.getTitle()));
-//        Mockito.when(studentRepository.findById(3L)).thenReturn(Optional.of(st));
-//
-//        Mockito.when(bookRepository.findBookByStudentAndTitle(st.getId(),bk.getTitle()))
-//                .thenReturn(Optional.empty());
-//
-
-//lw   mockMvc.perform(post(String.format("http://localhost:5000/api/v1/school/book/%d",3))
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(Objects.requireNonNull(asJsonString(bk))))
-//                .andExpect(status().isOk());
-
-    }
-
-    @Test
-    void deleteBook() {
-//        Book bk=new Book("Behold the Man");
-//        Student st=new Student("Nelu","Santinelu","aaa","123",26,1);
-//        st.setId(3L);
-//        assertEquals(Optional.of(bk),bookRepository.findBookByStudentAndTitle(st.getId(),bk.getTitle()));
-
-
-
-
-
-    }
-
-    @Test
-    void addEnrolment() throws Exception{
-//        Course c= new Course("oil wrestling","Bachelor's degree",2000,"soccer");
-//        c.setId(2L);
-//        Student s=new Student();
-//        s.setId(5L);
-//        s.setEmail("bbb");
-//        s.setPassword("123");
-//        assertEquals(Optional.of(s),studentRepository.findStudentByEmail(s.getEmail()));
-//        assertEquals(Optional.of(c),courseRepository.findById(c.getId()));
-//        mockMvc.perform(post(String.format("/api/v1/school/enrolment/%d/%d",s.getId(),c.getId())))
-//                .andExpect(status().isOk());
-//
-//        assertEquals(1,studentRepository.findStudentByEmail("bbb").get().getCourses().size());
-    }
-
-    @Test
-    void deleteEnrolment() {
-    }
-
-    @Test
-    void addCourse() {
-    }
-
-    @Test
-    void getCourseById() {
-    }
-
-    @Test
-    void getCoursesByOwner() {
-    }
-
-    @Test
-    void getPersonById() {
-    }
-
-//    public static String asJsonString(final Object obj) {
-//        try {
-//            return new ObjectMapper().writeValueAsString(obj);
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 }

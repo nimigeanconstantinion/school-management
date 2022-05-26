@@ -64,13 +64,18 @@ public class StudentServices {
             }
         }
 
-        public void removeBook(Long idStudent,Book book){
-            if(bookRepository.findBookByStudentAndTitle(idStudent, book.getTitle()).isPresent()){
-                Student student=studentRepository.findById(idStudent).get();
-                student.removeBook(book);
-                studentRepository.save(student);
-            }else{
-                throw new BookException("You don't have this book");
+        public void removeBook(Long idStudent,Long idBook){
+            if(bookRepository.findById(idBook).isPresent()&&studentRepository.findById(idStudent).isPresent()){
+                Student st=studentRepository.findById(idStudent).get();
+                List<Book> books=st.getBooks();
+                Book bk=books.stream().filter(b->b.getId()==idBook).collect(Collectors.toList()).get(0);
+
+                if(bk!=null){
+                    st.removeBook(bk);
+                    studentRepository.save(st);
+                }else{
+                    throw new BookException("You don have this book!!");
+                }
             }
         }
 
@@ -92,19 +97,20 @@ public class StudentServices {
 
     }
 
-        public void removeEnrolment(Student student,Course course){
-            if(studentRepository.findStudentByEmail(student.getEmail()).isPresent()){
-                if(courseRepository.findById(course.getId()).isPresent()){
-                    student.removeCourse(course);
-                    studentRepository.save(student);
+        public void removeEnrolment(Long idS,Long idE){
+           try{
+               Student s=studentRepository.findById(idS).get();
+               try{
+                   Course c=courseRepository.findById(idE).get();
+                   s.removeCourse(c);
+                   studentRepository.save(s);
+               }catch(Exception e){
+                   throw new CourseException("Course didn't exist!");
 
-                }else{
-                    throw new CourseException("Course didn't exist!");
-                }
-            }else{
-                throw new StudentException("Student not found!!");
-            }
-
+               }
+           }catch (Exception e){
+               throw new StudentException("Student not found!!");
+           }
         }
 
         public void addCourse(Course c){

@@ -1,6 +1,9 @@
 package com.example.api.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerator;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,6 +22,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 
 @Entity(name="Course")
 @Table(name="course")
+@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class Course {
     public Course(String name, String department, double time, String description) {
         this.name = name;

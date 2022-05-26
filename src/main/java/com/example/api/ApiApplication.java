@@ -89,6 +89,14 @@ public class ApiApplication {
             //System.out.println(bookRepository.findBookByStudentAndTitle(1L,"Cartea noua").isPresent());
            // System.out.println(studentRepository.findById(1L).isPresent());
             //s.getBooks().stream().filter(e->e.getTitle().equals("ceva"));
+//                Student s=new Student();
+//                s.setFirstName("aaa");
+//                s.setLastName("bbb");
+//                s.setEmail("zzzz");
+//                s.setAge(33);
+//                s.setPassword("123");
+//                System.out.println(s);
+//                studentServices.addStudent(s);
 
         };
     }

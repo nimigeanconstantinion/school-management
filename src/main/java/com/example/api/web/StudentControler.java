@@ -10,6 +10,7 @@ import com.example.api.services.StudentServices;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jackson.JsonObjectDeserializer;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.DataInput;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -38,7 +40,7 @@ public class StudentControler {
         }
 
         @ResponseStatus(HttpStatus.OK)
-        @GetMapping
+        @GetMapping("")
         public List<Student> getAllStudents(){
 
             return studentServices.getAllStudents();
@@ -56,6 +58,14 @@ public class StudentControler {
                 return studentServices.getUser(eml,pass);
         }
 
+        @ResponseStatus(HttpStatus.OK)
+        @PostMapping(value="/addstudent")
+        public void addUser(@RequestBody String newStud){
+                Student target2 = new Gson().fromJson(String.valueOf(newStud), Student.class); // deserializes json into target2
+               // Student st = objectMapper.readValue(newStud, Student.class);
+
+                studentServices.addStudent(target2);
+        }
 
 
         @ResponseStatus(HttpStatus.OK)
@@ -64,11 +74,14 @@ public class StudentControler {
                 studentServices.addBook(idStud,book);
         }
 
-        @ResponseStatus(HttpStatus.OK)
-        @DeleteMapping("/book/{idStudent}")
-        public void deleteBook(@PathVariable Long idStudent,Book book){
 
-                studentServices.removeBook(idStudent,book);
+
+
+        @ResponseStatus(HttpStatus.OK)
+        @DeleteMapping("/book/{idStudent}/{idBook}")
+        public void deleteBook(@PathVariable Long idStudent,Long idBook){
+
+                studentServices.removeBook(idStudent,idBook);
         }
 
 
@@ -79,9 +92,9 @@ public class StudentControler {
         }
 
         @ResponseStatus(HttpStatus.OK)
-        @DeleteMapping("/enrolment")
-        public void deleteEnrolment(Student student,Course course){
-                studentServices.removeEnrolment(student,course);
+        @DeleteMapping("/enrolment/{idStud}/{idCourse}")
+        public void deleteEnrolment(@PathVariable Long idStud,@PathVariable Long idCourse){
+                studentServices.removeEnrolment(idStud,idCourse);
         }
 
         @ResponseStatus(HttpStatus.OK)
@@ -97,6 +110,7 @@ public class StudentControler {
                 return courseRepository.findById(idCourse).get();
         }
 
+
         @ResponseStatus(HttpStatus.OK)
         @GetMapping("/enrolmentsById/{idStud}")
         public List<Course> getEnrolmentsById(@PathVariable Long idStud){
@@ -110,6 +124,7 @@ public class StudentControler {
         public  List<Course> getCoursesByOwner(@PathVariable Long idO){
                 return courseRepository.findAll().stream().filter(c->c.getId()==idO).collect(Collectors.toList());
         }
+
         @ResponseStatus(HttpStatus.OK)
         @GetMapping("/person_id/{id}")
         public Student getPersonById(@PathVariable Long id){

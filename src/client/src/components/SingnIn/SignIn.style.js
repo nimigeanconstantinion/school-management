@@ -89,7 +89,9 @@ export const WrapperSignIn=styled.div.attrs({className:"signin"})`
     height: 20px;
 
   }
-  
+  .btn:hover{
+    background:#564970 ;
+  } 
   //lkalkslaksdlkajsdlj
 
   

@@ -33,7 +33,7 @@ export default () => {
     }
 
     let signUp = () => {
-        //history.push("/signup");
+        history("/signup");
     }
     return (
 
