@@ -97,7 +97,7 @@ public class ApiApplication {
 //                s.setPassword("123");
 //                System.out.println(s);
 //                studentServices.addStudent(s);
-
+             //   studentServices.removeBook(1L,1L);
         };
     }
 }

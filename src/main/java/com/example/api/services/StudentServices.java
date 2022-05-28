@@ -67,24 +67,29 @@ public class StudentServices {
         public void removeBook(Long idStudent,Long idBook){
             if(bookRepository.findById(idBook).isPresent()&&studentRepository.findById(idStudent).isPresent()){
                 Student st=studentRepository.findById(idStudent).get();
-                List<Book> books=st.getBooks();
-                Book bk=books.stream().filter(b->b.getId()==idBook).collect(Collectors.toList()).get(0);
 
-                if(bk!=null){
+
+                Book bk=bookRepository.findById(idBook).get();
+//
+                if(bk.getStudent().getId()==idStudent){
                     st.removeBook(bk);
                     studentRepository.save(st);
                 }else{
                     throw new BookException("You don have this book!!");
                 }
+            }else{
+                throw new BookException("Book did not exist!!");
             }
+
         }
 
         public void addEnrolment(Long idStudent, Long idCourse){
-           Student s=studentRepository.findById(idStudent).get();
-           Course c=courseRepository.findById(idCourse).get();
 
-           if(studentRepository.findStudentByEmail(s.getEmail()).isPresent()){
-               if(courseRepository.findById(c.getId()).isPresent()){
+           if(studentRepository.findById(idStudent).isPresent()){
+               if(courseRepository.findById(idCourse).isPresent()){
+                   Student s=studentRepository.findById(idStudent).get();
+                   Course c=courseRepository.findById(idCourse).get();
+
                    s.addCourse(c);
                    studentRepository.save(s);
 
@@ -98,27 +103,29 @@ public class StudentServices {
     }
 
         public void removeEnrolment(Long idS,Long idE){
-           try{
-               Student s=studentRepository.findById(idS).get();
-               try{
-                   Course c=courseRepository.findById(idE).get();
-                   s.removeCourse(c);
-                   studentRepository.save(s);
-               }catch(Exception e){
-                   throw new CourseException("Course didn't exist!");
 
-               }
-           }catch (Exception e){
-               throw new StudentException("Student not found!!");
-           }
+            if(studentRepository.findById(idS).isPresent()){
+                Student s=studentRepository.findById(idS).get();
+                if(courseRepository.findById(idE).isPresent()){
+                    Course c=courseRepository.findById(idE).get();
+                    s.removeCourse(c);
+                    studentRepository.save(s);
+
+                }else{
+                    throw new CourseException("Course didn't exist!");
+
+                }
+            }else{
+                throw new StudentException("Student not found!!");
+
+            }
         }
 
         public void addCourse(Course c){
-            if(courseRepository.findAll().stream().filter(x->x.equals(c)).collect(Collectors.toList()).size()==0){
+            if(courseRepository.findById(c.getId()).isEmpty()){
                 courseRepository.save(c);
             }else{
                 throw new CourseException("Course exist!!");
-
             }
         }
 

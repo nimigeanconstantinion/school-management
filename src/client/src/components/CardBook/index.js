@@ -33,7 +33,7 @@ export default ({index,title,addClick,delbookClick})=>{
                        newB?
                            <>
                                <MdDeleteForever className={"delsign"} onClick={delbookClk}/>
-                               <p ref={refIndex} > aaaa {index}</p>
+                               <p ref={refIndex} className={"hiddenp"}> aaaa {index}</p>
                                <h4>Title</h4>
                                <p>{newB}</p>
 

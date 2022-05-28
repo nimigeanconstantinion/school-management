@@ -120,9 +120,9 @@ public class StudentControler {
 
 
         @ResponseStatus(HttpStatus.OK)
-        @GetMapping("/ownedcourses/{id}")
-        public  List<Course> getCoursesByOwner(@PathVariable Long idO){
-                return courseRepository.findAll().stream().filter(c->c.getId()==idO).collect(Collectors.toList());
+        @GetMapping("/ownedcourses/{idOwner}")
+        public  List<Course> getCoursesByOwner(@PathVariable Long idOwner){
+                return courseRepository.findAll().stream().filter(c->c.getOwner()==idOwner).collect(Collectors.toList());
         }
 
         @ResponseStatus(HttpStatus.OK)

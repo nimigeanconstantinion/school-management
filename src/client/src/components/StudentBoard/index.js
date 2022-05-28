@@ -192,7 +192,7 @@ export default ({stage})=>{
     let delBookClick=async (index)=>{
             let api=new Api();
             try{
-                let response=await api.
+              //  let response=await api.
 
             }catch (e){
 
@@ -276,11 +276,8 @@ export default ({stage})=>{
 
                                     {
                                         myBooks?
-
+                                            
                                             myBooks.map((b,index) => <CardBook index={index} title={b.title} addClick={addBook} delbookClick={delBookClick}/>)
-
-
-
                                             :""
                                     }
 
