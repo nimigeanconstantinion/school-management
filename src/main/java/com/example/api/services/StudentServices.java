@@ -10,6 +10,7 @@ import com.example.api.repository.CourseRepository;
 import com.example.api.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,14 +66,14 @@ public class StudentServices {
         }
 
         public void removeBook(Long idStudent,Long idBook){
-            if(bookRepository.findById(idBook).isPresent()&&studentRepository.findById(idStudent).isPresent()){
+            if(bookRepository.findById(idBook).isPresent()){
                 Student st=studentRepository.findById(idStudent).get();
-
-
                 Book bk=bookRepository.findById(idBook).get();
 //
                 if(bk.getStudent().getId()==idStudent){
                     st.removeBook(bk);
+                  //  bk.setStudent(null);
+                   // bookRepository.delete(bk);
                     studentRepository.save(st);
                 }else{
                     throw new BookException("You don have this book!!");

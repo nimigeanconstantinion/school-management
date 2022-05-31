@@ -9,6 +9,7 @@ export default ({crsClick,bkClick})=>{
     }
 
     let bkClk=()=>{
+        console.log("in meniu gen booclick");
         bkClick();
     }
 
@@ -16,7 +17,7 @@ export default ({crsClick,bkClick})=>{
         <WrapperMenuGen className="commands">
 
                 <button className="btnw mycourses" onClick={crsClk}>Courses</button>
-                <button className="btnw mybooks" onClick={bkClick}>Books</button>
+                <button className="btnw mybooks" onClick={bkClk}>Books</button>
 
 
         </WrapperMenuGen>

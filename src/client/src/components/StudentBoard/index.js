@@ -24,7 +24,9 @@ export default ({stage})=>{
     const [isDel,setIsDel]=useState(false);
     const [isAdd,setIsAdd]=useState(false);
     const [mesaj,setMesaj]=useState(undefined);
-    const [myBooks,setMyBooks]=useState(undefined);
+    const [myBooks,setMyBooks]=useState([]);
+
+
     const refM=useRef("");
 
 
@@ -34,6 +36,7 @@ export default ({stage})=>{
         getCompleteUser();
 
     },[]);
+
 
     let getEnrolments=async ()=>{
         let api=new Api();
@@ -49,7 +52,6 @@ export default ({stage})=>{
         let api = new Api();
         try {
             let data = await api.getCourses();
-            console.log(data);
             setAllCourses(data);
             return data;
 
@@ -62,28 +64,31 @@ export default ({stage})=>{
 
 
     let crsClick=()=>{
-        console.log("in couse click");
         setMenuType(1);
     }
 
-    let bkClick=()=>{
-        console.log("in book click");
-        console.log(user);
+    let bkClick= async ()=>{
+        await getCompleteUser();
+
+        // console.log(myBooks);
+        // setMyBooks(student.books);
+        //
         setMenuType(3);
         setScreen(4);
-
 
     }
 
     let getCompleteUser= async ()=>{
         let api=new Api();
         try{
-            let title="";
-            let emptyB=[{title}];
+            let emptyB={};
+            emptyB.title="";
 
             let response=await api.getPerson(user.id);
+            setStudent(response);
+            console.log(response);
             let r=response.books;
-            r.push({title});
+            r.push({emptyB});
             setMyBooks(r);
 
         }catch (e) {
@@ -93,7 +98,7 @@ export default ({stage})=>{
     }
 
     let courseClick=(e)=>{
-  //      console.log("hellllloooou");
+        //      console.log("hellllloooou");
         let id = 0;
         let elm=e.target;
 //        console.log(elm.className);
@@ -102,7 +107,7 @@ export default ({stage})=>{
         } else {
             id = elm.parentNode.children[0].innerHTML;
         }
-    //    console.log("id selectat="+id);
+        //    console.log("id selectat="+id);
         if(screen==1){
             setIsDel(true);
             setIsAdd(false);
@@ -120,15 +125,13 @@ export default ({stage})=>{
         if(isAdd){
             setIsAdd(false);
             let crs=allCourses.filter(c=>c.id==selectedId)[0];
-            console.log("tb sa adaugam cursul");
-            console.log(crs);
             if(allCourses.filter(m=>m.id==crs.id).length==0){
                 await enrollC(crs);
                 await getEnrolments();
 
             }else{
-                    setMesaj("You already enrolled this course!!");
-                    animateMess();
+                setMesaj("You already enrolled this course!!");
+                animateMess();
             }
 
         }
@@ -185,18 +188,28 @@ export default ({stage})=>{
     }
 
     let myEnrolClick=()=>{
-            getEnrolments();
-            setScreen(1);
+        getEnrolments();
+        setScreen(1);
     }
 
-    let delBookClick=async (index)=>{
-            let api=new Api();
-            try{
-              //  let response=await api.
+    let delBookClick=async (indexBook)=>{
+        let api=new Api();
+        try{
+            let idBook=myBooks[indexBook].id;
+             let response=await api.deleteBook(student.id,idBook);
+             let newList=[{}];
+             if(myBooks){
+                 newList=myBooks.filter(b=>b.id!=idBook);
+             }
 
-            }catch (e){
+            setScreen(5);
+            setScreen(4);
+           // setMyBooks(newList);
+            getCompleteUser();
 
-            }
+        }catch (e){
+                console.log("eroareee");
+        }
 
     }
 
@@ -205,8 +218,6 @@ export default ({stage})=>{
         if(isDel){
             setIsDel(false);
             let crs=myEnrolments.filter(c=>c.id==selectedId)[0];
-            console.log("tb sa stergem cursul");
-            console.log(crs);
             await delEnrolment(crs)
             //await enrollC(crs);
             await getEnrolments();
@@ -216,7 +227,7 @@ export default ({stage})=>{
 
 
     let addBook=()=>{
-       console.log("carte noua");
+        console.log("carte noua");
 
     }
 
@@ -237,59 +248,69 @@ export default ({stage})=>{
                         ):
 
                         menuType==1?(
-                            <MenuStudentCourse enrolClick={enrolClick} retClick={retClick} myEnrolClick={myEnrolClick} delClick={delClick}/>
-                        ):
+                                <MenuStudentCourse enrolClick={enrolClick} retClick={retClick} myEnrolClick={myEnrolClick} delClick={delClick}/>
+                            ):
                             menuType==3?(
-                            <MenuStudentBook retClick={retClick}/>
-                        ):""
+                                <MenuStudentBook retClick={retClick}/>
+                            ):""
 
 
 
                 }
-
+            <>
                 {
-                    screen==2?
-                        <div id="container">
-                            {
-                                allCourses
-                                    ? allCourses.map((c) => (<CardCourse course={c} courseClick={courseClick}/>))
-                                    : <img src={require('../../images/wheel.gif')} className="loading"/>
-                            }
-                        </div>
-                        :screen==1?
-                            <div id={"container"}>
+                    {
+                        1:
+                            (<div id={"container"}>
                                 {
                                     myEnrolments
                                         ?
-                                        myEnrolments.map((c) => (<CardCourse course={c} courseClick={courseClick}/>))
+                                        myEnrolments.map(c => (<CardCourse course={c} courseClick={courseClick}/>))
 
                                         : <img src={require('../../images/wheel.gif')} className="loading"/>
 
                                 }
-                            </div>
-                            :screen==3?
-                                <>
-                                    <CourseDetails idC={selectedId}/>
-                                </>
-                                :screen==4?
-                                <div id={"container"}>
+                            </div>),
+                        2: (
 
-                                    {
-                                        myBooks?
-                                            
-                                            myBooks.map((b,index) => <CardBook index={index} title={b.title} addClick={addBook} delbookClick={delBookClick}/>)
-                                            :""
-                                    }
+                            <div id="container">
+                                {
+                                    allCourses
+                                        ? allCourses.map((c) => (<CardCourse course={c} courseClick={courseClick}/>))
+                                        : <img src={require('../../images/wheel.gif')} className="loading"/>
+
+                                }
+
+                             </div>
+
+
+                        ),
+                        3:
+                            (
+                                    <>
+                                        <CourseDetails idC={selectedId}/>
+                                    </>
+
+                        ),
+                        4:(
+                                <div id={"container"}>
+                                {
+                                    myBooks?
+
+                                    myBooks.map((b,index) => <CardBook index={index} idBook={b.id} title={b.title} addClick={addBook} delbookClick={delBookClick}/>)
+                                    // <CardBook index={undefined} idBook={undefined} title={""} addClick={addBook} delbookClick={delBookClick}/>
+
+                                        :""
+                                }
 
                                 </div>
 
-                                    :""
-
-
-
+                        ),
+                        default:
+                            ""
+                    }[screen]
                 }
-
-
+            </>
 
 
 
@@ -302,3 +323,53 @@ export default ({stage})=>{
     )
 
 }
+
+// <>
+//
+//     switch(screen){
+//     case 1:
+//     <div id={"container"}>
+//
+//     myEnrolments
+//     ?
+//     myEnrolments.map((c) => (<CardCourse course={c} courseClick={courseClick}/>))
+//
+//     : <img src={require('../../images/wheel.gif')} className="loading"/>
+//
+//
+//     </div>
+//
+//
+//     case 3:
+//     <>
+//     <CourseDetails idC={selectedId}/>
+//     </>
+//
+//     case 2:
+//     <div id="container">
+//
+//     allCourses
+//     ? allCourses.map((c) => (<CardCourse course={c} courseClick={courseClick}/>))
+//     : <img src={require('../../images/wheel.gif')} className="loading"/>
+//
+//     </div>
+//
+//     case 4:
+//     <div id={"container"}>
+//
+// {
+//     myBooks?
+//
+//     [...myBooks.map((b,index) => <CardBook index={index} title={b.title} addClick={addBook} delbookClick={delBookClick}/>),
+//     <CardBook index={undefined} title={""} addClick={addBook} delbookClick={delBookClick}/>
+//     ]
+//
+//     :""
+// }
+//
+//     </div>
+//
+//     default:
+//
+//     ""
+// }

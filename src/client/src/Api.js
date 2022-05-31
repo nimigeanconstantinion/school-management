@@ -148,17 +148,15 @@ export default class Api{
 
     deleteBook=async (idStud, idBook)=>{
          try{
-             let response=await this.api("/api/v1/school/"+idStud+"/"+idBook,"DELETE");
-              if(response.status==200){
 
+             console.log("raspunsul din api este:");
+             let response=await this.api("/api/v1/school/book/"+idStud+"/"+idBook,"DELETE");
 
-              }else{
-
-
-              }
+             console.log(response);
+             return response;
 
          }catch (e) {
-
+            throw new Error(e);
          }
 
 

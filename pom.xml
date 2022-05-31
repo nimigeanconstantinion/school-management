@@ -181,6 +181,8 @@
                 </plugins>
             </build>
         </profile>
+
+
         <profile>
             <id>build-frontend</id>
             <activation>

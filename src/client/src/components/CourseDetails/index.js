@@ -12,6 +12,7 @@ export default ({idC})=>{
         getCourse(idC);
 
     },[])
+
     let getCourse =async (idC) => {
         let api = new Api()
         try {

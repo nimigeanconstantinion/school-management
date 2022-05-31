@@ -136,8 +136,7 @@ public class Student {
 
     @Transactional
     public void removeBook(Book book){
-        this.books.removeIf(b->b.getId()==book.getId());
-
+        this.books.remove(book);
     }
 
 

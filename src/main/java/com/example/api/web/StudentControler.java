@@ -79,8 +79,7 @@ public class StudentControler {
 
         @ResponseStatus(HttpStatus.OK)
         @DeleteMapping("/book/{idStudent}/{idBook}")
-        public void deleteBook(@PathVariable Long idStudent,Long idBook){
-
+        public void deleteBook(@PathVariable Long idStudent,@PathVariable Long idBook){
                 studentServices.removeBook(idStudent,idBook);
         }
 

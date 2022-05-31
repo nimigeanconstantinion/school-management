@@ -6,14 +6,15 @@ import crsimg from "../../images/cursor.svg"
 import {WrapperCardBook} from "./CardBook.style";
 import { ReactComponent as Logo } from './cursor.svg';
 
-export default ({index,title,addClick,delbookClick})=>{
+export default ({index,idBook,title,addClick,delbookClick})=>{
 
     // let style=style={{ cursor: "url(" + crsimg + "), auto"}}
     const [newB,setNewB]=useState();
+    const refId=useRef("");
     const refIndex=useRef("");
-
     useEffect(()=>{
         setNewB(title);
+
     },[]);
 
     let adClk=()=>{
@@ -21,10 +22,12 @@ export default ({index,title,addClick,delbookClick})=>{
     }
 
     let delbookClk=()=>{
-
-        delbookClick(refIndex.current.innerHTML);
+        let idB=refId.current.innerHTML;
+        let indx=refIndex.current.innerHTML;
+        console.log("sterg cartea cu id="+idB)
+        console.log("index="+indx);
+        delbookClick(indx);
     }
-
 
     return (
         <>
@@ -33,7 +36,8 @@ export default ({index,title,addClick,delbookClick})=>{
                        newB?
                            <>
                                <MdDeleteForever className={"delsign"} onClick={delbookClk}/>
-                               <p ref={refIndex} className={"hiddenp"}> aaaa {index}</p>
+                               <p ref={refId} className={"hiddenp"}>{idBook}</p>
+                               <p ref={refIndex} className={"hiddenp"}>{index}</p>
                                <h4>Title</h4>
                                <p>{newB}</p>
 

@@ -53,14 +53,16 @@ public class ApiApplication {
 //
 ////adaugare book
 ////
-//            Student s=studentRepository.findById(1L).get();
-////
-//            Book bk=new Book("Cartea o ;lllkk dkjkllsk");
-//        //System.out.println(s.addBook(bk));
+//            Student s=studentRepository.findById(7L).get();
+//////
+//            Book bk=new Book("kjjkjlklklkljl");
 //            s.addBook(bk);
-//         //   System.out.println(studentRepository.save(s));
-//            studentServices.addBook(1L,bk);
-//
+//            studentServices.addBook(7L,bk);
+//            Book bk2=new Book("Cartea o 4");
+//            s.addBook(bk);
+//            studentServices.addBook(7L,bk2);
+
+            //
            // studentServices.addBook(1L,bk);
 //        Book bk=bookRepository.findById(4L).get();
 //        Student s=studentRepository.findById(3L).get();

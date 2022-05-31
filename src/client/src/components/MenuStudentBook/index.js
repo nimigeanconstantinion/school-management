@@ -14,8 +14,6 @@ export default ({retClick})=>{
         <>
             <WrapperMenuStudBook className={"commands"}>
                 <button className="btnw myb">My Books</button>
-                <button className="btnw addB">Add Book</button>
-                <button className="btnw delB" >Delete Book</button>
                 <button className="ret" onClick={retClk}>Return to Home</button>
             </WrapperMenuStudBook>
         </>
