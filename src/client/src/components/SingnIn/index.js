@@ -20,6 +20,7 @@ export default () => {
     const refM = React.createRef();
     const [iserr,setIserr]=useState(false);
     const [user, setUser] = useContext(Context);
+    const [token,setToken]=useState("");
     let stud = {};
 
     useEffect(() => {
@@ -32,14 +33,21 @@ export default () => {
 
 
 
+
     let getUser = async () => {
         let xeml = eml.current.value;
         let xpassw = pass.current.value;
 
         let api = new Api();
         try {
-            let response = await api.getUser(xeml, xpassw);
-            return response;
+
+            let response = await api.login({username:xeml, password:xpassw});
+            if(response!=undefined&&response!="Unauthorized") {
+                return response;
+            }
+
+
+
 
         } catch (e) {
             throw new Error(e);
@@ -77,28 +85,37 @@ export default () => {
 
     let validateUser = async (e) => {
         e.preventDefault();
+        let api=new Api();
+        let xeml = eml.current.value;
+        let xpassw = pass.current.value;
         try {
-            let data = await getUser();
-            // stud = data;
-            // console.log("in validateuser");
-            let tuser=data;
+           let tkn= await getUser();
 
-            if(tuser.password===pass.current.value){
+
+            if(tkn!=""&&tkn!=undefined) {
+                console.log("am obtinut tokenul");
+                console.log(token);
+                let data = await api.getUser(xeml, xpassw);
+                console.log(data);
                 setStudent(data);
                 const usr = {};
                 usr.id = data.id;
                 usr.firstName = data.firstName;
                 usr.lastName = data.lastName;
-
+                usr.token = tkn;
                 Cookies.set("authenticatedUser", JSON.stringify(usr));
-
                 setUser(usr);
-
                 history("/studentBoard");
-
             }else{
-                let msg="Wrong password !!!";
+                console.log("Neautorizat");
+                let msg="";
+                if(xeml==""||xpassw==""){
+                     msg="User field is empty or password is empty!";
 
+
+                }else{
+                     msg="Unauthorized access for this user and password!!";
+                }
                 setMesaj(msg);
                 animateMess();
 
@@ -106,16 +123,16 @@ export default () => {
 
 
         } catch (e) {
-            console.log(e);
-            console.log(e.message.split(":")[2]);
-            let msg=(e.message.split(":")[2]);
-            if(msg.includes("fetch")){
-                msg="User field is empty or password is empty!";
-            }
-            //mkMessage(msg);
+            // console.log(e);
+            // console.log(e.message.split(":")[2]);
+             let msg=(e.message.split(":")[2]);
+             if(msg.includes("fetch")){
+                 msg="User field is empty or password is empty!";
+             }
+           // mkMessage(msg);
             setMesaj(msg);
             animateMess();
-            //throw new Error(e);
+            throw new Error(e);
         }
     }
 

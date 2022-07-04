@@ -1,16 +1,22 @@
 package com.example.api.model;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import static com.example.api.security.UserRole.STUDENT;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 @Entity(name = "Student")
@@ -25,7 +31,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 
 @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 
-public class Student {
+public class Student implements UserDetails {
 
     @Id
     @SequenceGenerator(
@@ -89,7 +95,7 @@ public class Student {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.password = password;
+        this.password = new BCryptPasswordEncoder().encode(password);
         this.age=age;
         this.role=role;
     }
@@ -137,6 +143,7 @@ public class Student {
     @Transactional
     public void removeBook(Book book){
         this.books.remove(book);
+        book.setStudent(null);
     }
 
 
@@ -162,4 +169,33 @@ public class Student {
     }
 
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return STUDENT.getGrantedAuthorities();
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

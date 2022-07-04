@@ -1,30 +1,26 @@
 package com.example.api.web;
 
-import com.example.api.dto.BookDto;
 import com.example.api.model.Book;
 import com.example.api.model.Course;
 import com.example.api.model.Student;
 import com.example.api.repository.BookRepository;
 import com.example.api.repository.CourseRepository;
 import com.example.api.services.StudentServices;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jackson.JsonObjectDeserializer;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.DataInput;
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/school")
 @CrossOrigin
+@Slf4j
 public class StudentControler {
 
         private StudentServices studentServices;
@@ -48,6 +44,7 @@ public class StudentControler {
 
         @ResponseStatus(HttpStatus.OK)
         @GetMapping("/courses")
+       // @PreAuthorize("hasAnyRole('ROLE_STUDENT')")
         public List<Course> getAllCourses(){
                return courseRepository.findAll();
         }
@@ -61,16 +58,20 @@ public class StudentControler {
         @ResponseStatus(HttpStatus.OK)
         @PostMapping(value="/addstudent")
         public void addUser(@RequestBody String newStud){
-                Student target2 = new Gson().fromJson(String.valueOf(newStud), Student.class); // deserializes json into target2
-               // Student st = objectMapper.readValue(newStud, Student.class);
+                System.out.println(newStud);
 
+                Student target2 = new Gson().fromJson(String.valueOf(newStud), Student.class); // deserializes json into target2
+                target2.setPassword(new BCryptPasswordEncoder().encode(target2.getPassword()));
+               // Student st = objectMapper.readValue(newStud, Student.class);
                 studentServices.addStudent(target2);
         }
 
 
         @ResponseStatus(HttpStatus.OK)
         @PostMapping(value="/book/{idStud}")
+        @PreAuthorize("hasAnyRole('ROLE_STUDENT')")
         public void addBook(@PathVariable Long idStud, @RequestBody Book book){
+               log.info("added book");
                 studentServices.addBook(idStud,book);
         }
 
@@ -130,5 +131,10 @@ public class StudentControler {
                 return studentServices.getUserById(id);
         }
 
-
+        @PreAuthorize("hasAuthority('STUDENT_WRITE')")
+        @RequestMapping("/restricted")
+        @ResponseBody
+        public String restricted() {
+                return "You found the secret lair!";
+        }
 }

@@ -1,6 +1,5 @@
 package com.example.api.services;
 
-import com.example.api.repository.StudentRepository;
 import com.example.api.exceptions.*;
 import com.example.api.model.Book;
 import com.example.api.model.Course;
@@ -10,7 +9,6 @@ import com.example.api.repository.CourseRepository;
 import com.example.api.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +31,9 @@ public class StudentServices {
 
         public void addStudent(Student student){
             if(!studentRepository.findStudentByEmail(student.getEmail()).isPresent()){
+                System.out.println("parola este= "+student.getPassword());
+
+
                 studentRepository.save(student);
             }else{
                 throw new StundentExists("Student exists!!");
@@ -72,8 +73,8 @@ public class StudentServices {
 //
                 if(bk.getStudent().getId()==idStudent){
                     st.removeBook(bk);
-                  //  bk.setStudent(null);
-                   // bookRepository.delete(bk);
+//                    bk.setStudent(null);
+//                    bookRepository.delete(bk);
                     studentRepository.save(st);
                 }else{
                     throw new BookException("You don have this book!!");

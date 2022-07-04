@@ -43,7 +43,7 @@ public class Book {
 
 
     @ManyToOne(
-            fetch = FetchType.LAZY, cascade = CascadeType.ALL
+            fetch = FetchType.LAZY
     )
 
     @JoinColumn(

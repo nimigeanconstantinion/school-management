@@ -10,6 +10,8 @@ import CourseDetails from "../CourseDetails/index";
 import ErrorMessage from "../Message";
 import MenuStudentBook from "../MenuStudentBook/index";
 import CardBook from "../CardBook";
+import CardBookAdd from "../CardBookAdd";
+import NewBook from "../NewBook";
 
 
 export default ({stage})=>{
@@ -31,12 +33,17 @@ export default ({stage})=>{
 
 
     useEffect(()=>{
-
+        setIsAdd(false);
+        setIsDel(false);
         getAllCourses();
         getCompleteUser();
 
     },[]);
 
+    // useEffect(()=>{
+    //      getCompleteUser();
+    //
+    //  },[screen]);
 
     let getEnrolments=async ()=>{
         let api=new Api();
@@ -62,17 +69,25 @@ export default ({stage})=>{
 
     }
 
-
     let crsClick=()=>{
         setMenuType(1);
     }
 
     let bkClick= async ()=>{
-        await getCompleteUser();
+        setScreen(10);
+       try{
+             await getCompleteUser();
+
+        }       catch (e) {
+
+       }
+
 
         // console.log(myBooks);
-        // setMyBooks(student.books);
+
+        setMyBooks(student.books);
         //
+
         setMenuType(3);
         setScreen(4);
 
@@ -83,13 +98,17 @@ export default ({stage})=>{
         try{
             let emptyB={};
             emptyB.title="";
-
+            let newStud=undefined;
             let response=await api.getPerson(user.id);
-            setStudent(response);
-            console.log(response);
-            let r=response.books;
-            r.push({emptyB});
-            setMyBooks(r);
+            newStud=response;
+            setStudent(newStud);
+            console.log("newstud este ");
+            console.log(newStud);
+            console.log(newStud);
+            return newStud;
+            //let r=newStud.books;
+          //  r.push({emptyB});
+           // setMyBooks(r);
 
         }catch (e) {
 
@@ -97,17 +116,8 @@ export default ({stage})=>{
 
     }
 
-    let courseClick=(e)=>{
-        //      console.log("hellllloooou");
-        let id = 0;
-        let elm=e.target;
-//        console.log(elm.className);
-        if (elm.className!=""&&elm.className.includes("cardcourse")) {
-            id = elm.children[0].innerHTML;
-        } else {
-            id = elm.parentNode.children[0].innerHTML;
-        }
-        //    console.log("id selectat="+id);
+    let courseClick=(idCourseDet)=>{
+        console.log("id selectat="+idCourseDet);
         if(screen==1){
             setIsDel(true);
             setIsAdd(false);
@@ -115,17 +125,19 @@ export default ({stage})=>{
             setIsAdd(true);
             setIsDel(false);
         }
-        setSelectedId(id);
+        setSelectedId(idCourseDet);
 
         setScreen(3);
     }
 
     let enrolClick=async ()=>{
         setScreen(2) ;
+        console.log("Atentieeeeee citeste datele");
+
         if(isAdd){
             setIsAdd(false);
             let crs=allCourses.filter(c=>c.id==selectedId)[0];
-            if(allCourses.filter(m=>m.id==crs.id).length==0){
+            if(myEnrolments==undefined||myEnrolments.filter(m=>m.id==crs.id).length==0){
                 await enrollC(crs);
                 await getEnrolments();
 
@@ -160,7 +172,6 @@ export default ({stage})=>{
         }, 4200);
     }
 
-
     let enrollC=async (course)=>{
         let api=new Api();
         try{
@@ -192,20 +203,23 @@ export default ({stage})=>{
         setScreen(1);
     }
 
-    let delBookClick=async (indexBook)=>{
+    let delBookClick=async (idBook)=>{
         let api=new Api();
+
         try{
-            let idBook=myBooks[indexBook].id;
-             let response=await api.deleteBook(student.id,idBook);
-             let newList=[{}];
+            setScreen(10);
+            console.log("sudentul este :");
+            console.log(student);
+            let response=await api.deleteBook(student.id,idBook);
+            console.log("Raspuns La stergere carte");
+            console.log(response);
+
+             let newList=[];
              if(myBooks){
                  newList=myBooks.filter(b=>b.id!=idBook);
              }
-
-            setScreen(5);
             setScreen(4);
-           // setMyBooks(newList);
-            getCompleteUser();
+            setMyBooks(newList);
 
         }catch (e){
                 console.log("eroareee");
@@ -225,10 +239,31 @@ export default ({stage})=>{
 
     }
 
-
     let addBook=()=>{
-        console.log("carte noua");
+        setScreen(5);
 
+
+    }
+
+    let addBookClick=async (book)=>{
+        let api=new Api();
+        try{
+            let result=await api.addBook(book,student.id,user.token);
+            let news=await getCompleteUser();
+            let bk=[...myBooks,book]
+            let books=news.books;
+            console.log("din getCompleteUser avem cartile");
+            console.log(news.books);
+//            let newb=[...myBooks,books]
+            //setScreen(10);
+            setScreen(4);
+
+            setMyBooks(books);
+
+//            setMenuType(3);
+        }catch (e) {
+
+        }
     }
 
     return(
@@ -297,17 +332,27 @@ export default ({stage})=>{
                                 {
                                     myBooks?
 
-                                    myBooks.map((b,index) => <CardBook index={index} idBook={b.id} title={b.title} addClick={addBook} delbookClick={delBookClick}/>)
-                                    // <CardBook index={undefined} idBook={undefined} title={""} addClick={addBook} delbookClick={delBookClick}/>
+                                 [...myBooks.map((b) => {
 
-                                        :""
+                                        return <CardBook key={b.title} idBook={b.id} title={b.title} delbookClick={delBookClick}/>;
+                                    }),
+                                 <CardBookAdd addClick={addBook}/>
+                                 ]
+
+
+                                        :"Loading ..."
                                 }
 
                                 </div>
 
                         ),
+                        5:
+                            <div className={"addbook"}>
+                                   <NewBook addBookClick={addBookClick}/>
+                            </div>
+                        ,
                         default:
-                            ""
+                            "Processing ..."
                     }[screen]
                 }
             </>
@@ -323,53 +368,3 @@ export default ({stage})=>{
     )
 
 }
-
-// <>
-//
-//     switch(screen){
-//     case 1:
-//     <div id={"container"}>
-//
-//     myEnrolments
-//     ?
-//     myEnrolments.map((c) => (<CardCourse course={c} courseClick={courseClick}/>))
-//
-//     : <img src={require('../../images/wheel.gif')} className="loading"/>
-//
-//
-//     </div>
-//
-//
-//     case 3:
-//     <>
-//     <CourseDetails idC={selectedId}/>
-//     </>
-//
-//     case 2:
-//     <div id="container">
-//
-//     allCourses
-//     ? allCourses.map((c) => (<CardCourse course={c} courseClick={courseClick}/>))
-//     : <img src={require('../../images/wheel.gif')} className="loading"/>
-//
-//     </div>
-//
-//     case 4:
-//     <div id={"container"}>
-//
-// {
-//     myBooks?
-//
-//     [...myBooks.map((b,index) => <CardBook index={index} title={b.title} addClick={addBook} delbookClick={delBookClick}/>),
-//     <CardBook index={undefined} title={""} addClick={addBook} delbookClick={delBookClick}/>
-//     ]
-//
-//     :""
-// }
-//
-//     </div>
-//
-//     default:
-//
-//     ""
-// }

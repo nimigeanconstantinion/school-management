@@ -1,13 +1,9 @@
 package com.example.api;
 
-import com.example.api.model.Book;
-import com.example.api.model.Course;
-import com.example.api.model.Student;
 import com.example.api.repository.BookRepository;
 import com.example.api.repository.CourseRepository;
 import com.example.api.repository.StudentRepository;
 import com.example.api.services.StudentServices;
-import com.github.javafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -100,6 +96,8 @@ public class ApiApplication {
 //                System.out.println(s);
 //                studentServices.addStudent(s);
              //   studentServices.removeBook(1L,1L);
+           // Student student=new Student("Nelu","Santinelu","www","123",20,0);
+           // studentServices.addStudent(student);
         };
     }
 }
