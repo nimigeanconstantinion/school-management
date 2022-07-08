@@ -77,7 +77,7 @@ public class StudentControler {
 
 
 
-mv
+
         @ResponseStatus(HttpStatus.OK)
         @DeleteMapping("/book/{idStudent}/{idBook}")
         public void deleteBook(@PathVariable Long idStudent,@PathVariable Long idBook){
